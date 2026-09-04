@@ -43,24 +43,15 @@
         </div>
         <div style="text-align:center; margin-top:30px; font-size:0.8rem; color:#555;">Folio 5204160405358537 | SHA 8f37a946... | © 2026 Marco Antonio Rojas Valdovinos</div>
     </div>
+
+
 <script>
-// ⚠️ PEGA TUS LINKS REALES AQUÍ - reemplaza AQUI_TU_LINK_1 y AQUI_TU_LINK_2
-const LINK_NIVEL_1 = "AQUI_TU_LINK_1";
-const LINK_NIVEL_2 = "AQUI_TU_LINK_2";
-
-document.getElementById('btn-n1').href = LINK_NIVEL_1;
-document.getElementById('btn-n2').href = LINK_NIVEL_2;
-
-if(LINK_NIVEL_1.includes("AQUI")) document.getElementById('btn-n1').onclick = ()=>{alert("Falta configurar LINK_NIVEL_1"); return false;}
-if(LINK_NIVEL_2.includes("AQUI")) document.getElementById('btn-n2').onclick = ()=>{alert("Falta configurar LINK_NIVEL_2"); return false;}
-
 function demoPlan(nivel) {
     if (nivel === 1) {
         alert("🛠️ PROCESO NIVEL 1\n\n1. Generando folio único...\n2. Aplicando sello KRONOS-TRACE...\n3. Creando PDF con QR...\n4. Listo. Ahora verás la verificación.");
     } else if (nivel === 2) {
         alert("🛠️ PROCESO NIVEL 2\n\n1. Generando folio único...\n2. Aplicando sello KRONOS-TRACE...\n3. Verificando blockchain (Ethereum)...\n4. Certificado ISO 27001 integrado...\n5. Listo. Ahora verás la verificación.");
     }
-    // Redirigir a la página de verificación para mostrar el resultado
     setTimeout(() => { window.location.href = "verification.html"; }, 1500);
 }
 </script>
