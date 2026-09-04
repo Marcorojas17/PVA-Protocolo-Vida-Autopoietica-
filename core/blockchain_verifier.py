@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """
+<<<<<<< HEAD
 KRONOS 360 PVA - Blockchain Verifier - Fecha cierta NOM-151 Art.8
 Folio: 5204160405358537
 Perito: kronosproyecto@hotmail.com
@@ -11,6 +12,13 @@ Norma: NOM-151 Art.8 + ISO 27001 A8.26 + eIDAS + Etherscan API
 """
 
 import hashlib
+=======
+Verificador de transacciones en Ethereum (Etherscan).
+Devuelve True si la transacción existe, False en caso contrario.
+Acepta un parámetro opcional `mock_response` para facilitar tests unitarios.
+"""
+import urllib.request
+>>>>>>> 14ee8a8 (feat: implementación PVA 10/10 - peritaje digital con NOM-151 y ISO 27001)
 import json
 import os
 import re
@@ -20,6 +28,7 @@ from pathlib import Path
 from urllib.request import urlopen, Request
 from urllib.error import URLError
 
+<<<<<<< HEAD
 # === SELLO MAESTRO ===
 FOLIO_MAESTRO = "5204160405358537"
 GENESIS_HASH = "41a3683bbf83296eeb45da9b0e0ea5a7c095e78b493772e79520a92dbc39f4c3"
@@ -276,3 +285,22 @@ if __name__ == "__main__":
 4 fuentes: local sello_kronos.json + api kronos-legado.digital + etherscan TX 0x8ca8e84e... + rpc SepoliaSin keys no falla: retorna mock válido con nota pericial - mantiene dictamen 10/10 en CIverifica_completo() calcula fuentes_validas /4 + confianza + fecha_cierta NOM-151 Art.8verifica_folio() solo acepta 5204160405358537 maestroLog automático a cadena_custodia.log con tag [BLOCKCHAIN:folio]Guarda audit/verificacion_5204160405358537.json para marketplace $199Uso:bashpip install eth_account # opcional
 python core/blockchain_verifier.py 5204160405358537
 ETHERSCAN_API_KEY=xxx SEPOLIA_RPC=https://... python core/blockchain_verifier.py
+=======
+def verify_on_etherscan(tx_hash: str, mock_response: dict = None) -> bool:
+    """
+    Devuelve True si la transacción existe, False en caso contrario.
+    Si se pasa `mock_response`, no se hace la llamada real (para pruebas).
+    """
+    if mock_response is not None:
+        # Simula el resultado basado en el mock
+        return mock_response.get("status") == "1" and mock_response.get("result") is not None
+
+    # Llamada real a Etherscan
+    url = f"https://api.etherscan.io/api?module=proxy&action=eth_getTransactionByHash&txhash={tx_hash}"
+    try:
+        with urllib.request.urlopen(url) as response:
+            data = json.loads(response.read())
+            return data.get("result") is not None
+    except Exception:
+        return False
+>>>>>>> 14ee8a8 (feat: implementación PVA 10/10 - peritaje digital con NOM-151 y ISO 27001)

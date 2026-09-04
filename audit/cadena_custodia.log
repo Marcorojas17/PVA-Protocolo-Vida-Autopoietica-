@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 [2026-05-13T00:00:00Z] [INIT:5204160405358537] KRONOS 360 PVA - INICIO CADENA CUSTODIA - Folio maestro 5204160405358537 - Perito kronosproyecto@hotmail.com - Genesis 41a3683bbf83296eeb45da9b0e0ea5a7c095e78b493772e79520a92dbc39f4c3
 [2026-05-13T00:00:01Z] [MANIFIESTO:5204160405358537] primer_manifiesto.txt generado - polaridad 51%_HUMANO:41a3683bbf83296eeb45da9b|49%_IA:0e0ea5a7c095e78b493772e79520a92dbc39f4c3 - SHA256: 41a3683bbf83296eeb45da9b0e0ea5a7c095e78b493772e79520a92dbc39f4c3
 [2026-05-13T00:00:02Z] [SELLO:5204160405358537] sello_kronos.json creado - SELLO:KRONOS-TRACE-PVA-5204160405358537 - FOLIO:5204160405358537|PERITO:kronosproyecto@hotmail.com|GENESIS:41a3683bbf83296eeb45da9b0e0ea5a7c095e78b493772e79520a92dbc39f4c3
@@ -15,3 +16,11 @@
 [2026-05-13T00:00:14Z] [CONSERVA:5204160405358537] NOM-151 Art.10 - conservación 10 años - audit/cadena_custodia.log - audit/sello_kronos.json - audit/primer_manifiesto.txt - private_keys/ en .gitignore + KMS - integridad SHA256
 [2026-05-13T00:00:15Z] [PERITO:5204160405358537] Dictamen final - Perito Marco Antonio Rojas Valdovinos - kronosproyecto@hotmail.com - Folio 5204160405358537 - Sello KRONOS-TRACE-PVA-5204160405358537 - Conclusion: folio autentico, trazable, fecha cierta blockchain, 51/49 innegociable - listo para MP/SAT/Tribunal
 [2026-09-04T12:00:00Z] [CURRENT:5204160405358537] Estado actual verificado por oracle.js - folio 5204160405358537 activo - TX 0x8ca8e84e1258abac9acb29d14d25114e4775d782ecfda51ae29933247ed2970e confirmada - QR https://kronos-legado.digital/v/5204160405358537 - sello_kronos.json presente - dictamen 10/10 - marketplace $49/$199 operativo
+=======
+2026-09-04T07:52:05|Registro SafeCreative 2607146379465 verificado|HASH=eecbe5b78f8ff49c14e3c2aaac16fd36251397f21f6aec4e21cddf369ea80820|PREV=0000000000000000000000000000000000000000000000000000000000000000
+2026-09-04T07:52:05|Hash SHA256 Génesis cargado|HASH=33b41e109c88984754eecd9bd6a4e67357a2ec8a446e957845b53ecf4711890d|PREV=eecbe5b78f8ff49c14e3c2aaac16fd36251397f21f6aec4e21cddf369ea80820
+2026-09-04T07:52:05|Motor PVA iniciado (51% Humano / 49% IA)|HASH=5ca335ddf57e087585b534c1a84934507170f158c4632e022fcb9005a6dac355|PREV=33b41e109c88984754eecd9bd6a4e67357a2ec8a446e957845b53ecf4711890d
+2026-09-04T07:52:05|Sello KRONOS-TRACE generado|HASH=0be7339252031b1ecc33ef8b9f4d87a93e24b9429b448207fc3c0dfff9aef8aa|PREV=5ca335ddf57e087585b534c1a84934507170f158c4632e022fcb9005a6dac355
+2026-09-04T07:52:05|Manifiesto derivado sellado|HASH=acbdcf7a9ef781724d9a143319dc8c8431a45831bd48e624ab081fd722afa92c|PREV=0be7339252031b1ecc33ef8b9f4d87a93e24b9429b448207fc3c0dfff9aef8aa
+2026-09-04T07:52:05|Auditoría ISO/NOM completada|HASH=f54b440d7d4b2690edc492ca0f08a00270539d06d25a79aeb2c8da2d3915ef70|PREV=acbdcf7a9ef781724d9a143319dc8c8431a45831bd48e624ab081fd722afa92c
+>>>>>>> 14ee8a8 (feat: implementación PVA 10/10 - peritaje digital con NOM-151 y ISO 27001)

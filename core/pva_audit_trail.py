@@ -47,11 +47,39 @@ class PVAAuditTrail:
         self.log_path = self.audit_dir / "cadena_custodia.log"
         self.sello_path = self.audit_dir / "sello_kronos.json"
 
+<<<<<<< HEAD
     def sha256(self, data: str) -> str:
         return hashlib.sha256(data.encode()).hexdigest()
 
     def valida(self, tipo: str, valor: str) -> bool:
         return bool(REGEX[tipo].match(valor)) if tipo in REGEX else False
+=======
+def create_log_entry(event_description, prev_hash):
+    timestamp = int(time.time())
+    timestamp_iso = datetime.fromtimestamp(timestamp, datetime.UTC).isoformat()
+    
+    event_data = f"{FOLIO}|{PERITO}|{event_description}|{timestamp}|{prev_hash}"
+    event_hash = hashlib.sha256(event_data.encode()).hexdigest()
+    
+    log_line = f"{timestamp_iso}|{event_description}|HASH={event_hash}|PREV={prev_hash}"
+    
+    with open(LOG_PATH, "a", encoding="utf-8") as f:
+        f.write(log_line + "\n")
+    
+    return event_hash
+
+def upload_to_ipfs(file_path):
+    ipfs_url = os.getenv("IPFS_URL", "http://127.0.0.1:5001")
+    try:
+        import ipfshttpclient
+        client = ipfshttpclient.connect(ipfs_url)
+        res = client.add(file_path)
+        return res["Hash"]
+    except Exception as e:
+        print(f"⚠️  No se pudo subir a IPFS ({ipfs_url}): {e}")
+        print("   Se continuará sin respaldo IPFS. Puedes configurar IPFS_URL en el entorno.")
+        return None
+>>>>>>> 14ee8a8 (feat: implementación PVA 10/10 - peritaje digital con NOM-151 y ISO 27001)
 
     def valida_paquete(self) -> dict:
         return {
