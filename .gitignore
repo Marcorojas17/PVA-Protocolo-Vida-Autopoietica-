@@ -1,0 +1,30 @@
+# Secretos y llaves privadas
+*.key
+*.pem
+*.p12
+*.pfx
+.env
+config/private_keys/
+
+# Archivos generados
+audit/dictamen_*.pdf
+audit/qr_*.png
+audit/cadena_custodia.log
+audit/sello_kronos.json
+
+# Python
+__pycache__/
+*.pyc
+venv/
+env/
+*.egg-info/
+dist/
+build/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
