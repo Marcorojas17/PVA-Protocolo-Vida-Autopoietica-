@@ -9,3 +9,4 @@ ipfshttpclient
 pytest
 flake8
 mypy
+mercadopago

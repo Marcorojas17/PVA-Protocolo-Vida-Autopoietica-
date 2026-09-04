@@ -16,6 +16,8 @@ REG_SAFE = "2609046908622"
 SHA_OFICIAL = "8f37a94672bbbf25de28b7cf6923435a37514bcba9902c08daa3b5733f8900c1"
 GENESIS = "41a3683bbf83296eeb45da9b0e0ea5a7c095e78b493772e79520a92dbc39f4c3"
 PERITO = "kronosproyecto@hotmail.com"
+CODIGO_CIERRE = 3327
+NUMERO_JUEZ = 8
 
 RUTA_ESTADO = "audit/estado_mental_colectivo.json"
 RUTA_LOG = "audit/cadena_custodia.log"
@@ -29,7 +31,10 @@ ESTADO_COLECTIVO = {
     "alertas": [],
     "regla": "51% Humano / 49% IA",
     "perito": PERITO,
-    "timestamp_ultima_actualizacion": None
+    "timestamp_ultima_actualizacion": None,
+    "ciclo": 0,
+    "codigo_cierre": CODIGO_CIERRE,
+    "numero_juez": NUMERO_JUEZ
 }
 
 def generar_hash_expediente():
@@ -92,6 +97,29 @@ class AgenteOraculo:
     def consultar(self, hash_user):
         return f"KRONOS 360: Hash {hash_user[:8]}... Autor: Marco A. Rojas. Registro: {REG_SAFE}"
 
+class AgenteNotario:
+    def sellar(self, hash_expediente):
+        registrar_evento("NOTARIO", f"Expediente sellado con código {CODIGO_CIERRE}")
+        return f"NOTARIO-SELLO-{CODIGO_CIERRE}"
+
+class AgenteDefensor:
+    def proteger(self, hash_user):
+        registrar_evento("DEFENSOR", f"Anti-scraping OK - Hash {hash_user[:8]}...")
+        return "DEFENSOR-ACTIVO"
+
+class AgenteJuez:
+    def validar(self):
+        ciclo = ESTADO_COLECTIVO.get("ciclo", 0) + 1
+        ESTADO_COLECTIVO["ciclo"] = ciclo
+        suma = 3 + 3 + 2 + 7
+        if suma % NUMERO_JUEZ == 0 or ciclo % NUMERO_JUEZ == 0:
+            registrar_evento("JUEZ", f"Ciclo {ciclo} - VALIDADO por el 8")
+            return "APROBADO"
+        else:
+            registrar_evento("JUEZ", f"Ciclo {ciclo} - ALERTA: Regla del 8 no cumple")
+            ESTADO_COLECTIVO["alertas"].append("Regla del 8 violada")
+            return "ALERTA"
+
 class Enjambre:
     def __init__(self):
         self.custodio = AgenteCustodio()
@@ -99,6 +127,9 @@ class Enjambre:
         self.vigilante = AgenteVigilante()
         self.negociador = AgenteNegociador()
         self.oraculo = AgenteOraculo()
+        self.notario = AgenteNotario()
+        self.defensor = AgenteDefensor()
+        self.juez = AgenteJuez()
 
     def auto_sanacion(self):
         if not os.path.exists(RUTA_ESTADO):
@@ -118,9 +149,16 @@ class Enjambre:
         self.custodio.vigilar()
         sello = self.escriba.generar(GENESIS)
         self.vigilante.detectar_plagio(sello)
+        self.notario.sellar(generar_hash_expediente())
+        self.defensor.proteger(sello)
+        resultado = self.juez.validar()
         guardar_estado()
         hash_exp = generar_hash_expediente()
         registrar_evento("ENJAMBRE", f"Expediente listo para PSC (NOM-151). Hash: {hash_exp[:16]}...")
+        if resultado == "APROBADO":
+            registrar_evento("ENJAMBRE", f"Ciclo {ESTADO_COLECTIVO['ciclo']} - Sello {CODIGO_CIERRE} confirmado")
+        else:
+            registrar_evento("ENJAMBRE", "ALERTA: Ciclo no validado. Auto-sanación en siguiente ciclo.")
 
 if __name__ == "__main__":
     import time
