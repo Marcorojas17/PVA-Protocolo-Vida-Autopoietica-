@@ -1,111 +1,111 @@
-#!/usr/bin/env python3
 import os
-import threading
+import hmac
+import hashlib
+import smtplib
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+from email.mime.base import MIMEBase
+from email import encoders
 from flask import Flask, request, jsonify
-from flask_cors import CORS
-from mercadopago.webhook import WebhookSignatureValidator, InvalidWebhookSignatureError
 from dotenv import load_dotenv
+import mercadopago
 
 load_dotenv()
 
+app = Flask(__name__)
+
+# Configuración desde .env (NUNCA hardcodeado)
 MP_ACCESS_TOKEN = os.getenv("MP_ACCESS_TOKEN")
 MP_WEBHOOK_SECRET = os.getenv("MP_WEBHOOK_SECRET")
+SMTP_HOST = os.getenv("SMTP_HOST", "smtp.gmail.com")
+SMTP_PORT = int(os.getenv("SMTP_PORT", 587))
+SMTP_USER = os.getenv("SMTP_USER")
+SMTP_PASS = os.getenv("SMTP_PASS")
+FOLIO_BASE = "5204160405358537"
+HASH_GENESIS = "41a3683bbf83296eeb45da9b0e0ea5a7c095e78b493772e79520a92dbc39f4c3"
 
-app = Flask(__name__)
-CORS(app)  # Habilita CORS para que GitHub Pages pueda llamar a tu API
+# Instancia de Mercado Pago
+sdk = mercadopago.SDK(MP_ACCESS_TOKEN)
 
-# Configuración de precios
-PRECIOS = {1: 500.0, 2: 1500.0, 3: 3500.0}
-TITULOS = {
-    1: "Sello KRONOS Nivel 1 - Dictamen PDF + QR",
-    2: "Sello KRONOS Nivel 2 - Auditoría ISO + Blockchain",
-    3: "Plan Enjambre - Protección 24/7 mensual",
-}
+# --- Generación de PDF (con ReportLab) ---
+from reportlab.pdfgen import canvas
+from reportlab.lib.pagesizes import letter
+from reportlab.lib.colors import HexColor
 
-# ------- WEBHOOK (pagos) -------
-def procesar_evento(data_id: str):
-    print(f"[WEBHOOK] Procesando pago {data_id}...")
-    try:
-        if not MP_ACCESS_TOKEN:
-            print("[WEBHOOK] MP_ACCESS_TOKEN no configurado; omitiendo consulta.")
-            return
-        import mercadopago
-        sdk = mercadopago.SDK(MP_ACCESS_TOKEN)
-        payment_info = sdk.payment().get(data_id)
-        payment_status = payment_info["response"]["status"]
-        if payment_status == "approved":
-            import sys
-            sys.path.append('/workspaces/PVA-Protocolo-Vida-Autopoietica-/KRONOS/agentes')
-            from enjambre_autopoietico import Enjambre
-            enjambre = Enjambre()
-            enjambre.ciclo()
-            print(f"[WEBHOOK] Pago {data_id} aprobado. Enjambre ejecutado.")
-        else:
-            print(f"[WEBHOOK] Pago {data_id} estado: {payment_status}")
-    except Exception as e:
-        print(f"[WEBHOOK] Error procesando {data_id}: {e}")
+def generar_pdf(folio_cliente, op_id, email_cliente):
+    nombre_archivo = f"audit/DICTAMEN-{folio_cliente}-{op_id}.pdf"
+    c = canvas.Canvas(nombre_archivo, pagesize=letter)
+    w, h = letter
+    c.setFillColor(HexColor("#0a0a0a"))
+    c.rect(0, 0, w, h, fill=1, stroke=0)
+    c.setFillColor(HexColor("#00ffcc"))
+    c.setFont("Helvetica-Bold", 20)
+    c.drawString(50, h - 80, "KRONOS 360 - DICTAMEN PERICIAL")
+    c.setFillColor(HexColor("#ffffff"))
+    c.setFont("Helvetica", 12)
+    c.drawString(50, h - 120, f"Folio: {folio_cliente}")
+    c.drawString(50, h - 140, f"Operación MP: {op_id}")
+    c.drawString(50, h - 160, f"Hash Génesis: {HASH_GENESIS}")
+    c.drawString(50, h - 180, f"Perito: kronosproyecto@hotmail.com")
+    c.drawString(50, h - 200, f"Cliente: {email_cliente}")
+    c.drawString(50, h - 220, "SafeCreative: 2607146379465")
+    c.setFillColor(HexColor("#D4AF37"))
+    c.setFont("Helvetica-Bold", 10)
+    c.drawString(50, 100, f"Sello: KRONOS-TRACE-PVA-{folio_cliente}")
+    c.save()
+    return nombre_archivo
 
-@app.route('/webhook', methods=['POST'])
-def webhook():
-    data_id = request.args.get("data.id")
-    if not data_id:
-        return ("missing data.id", 400)
-    if not MP_WEBHOOK_SECRET:
-        return ("missing webhook secret", 500)
-    x_signature = request.headers.get("x-signature")
-    x_request_id = request.headers.get("x-request-id")
-    if not x_signature or not x_request_id:
-        return ("missing signature headers", 400)
-    try:
-        WebhookSignatureValidator.validate(
-            x_signature,
-            x_request_id,
-            data_id,
-            MP_WEBHOOK_SECRET,
-        )
-    except InvalidWebhookSignatureError:
-        return ("", 401)
-    threading.Thread(target=procesar_evento, args=(data_id,), daemon=True).start()
-    return ("", 200)
+# --- Envío de correo ---
+def enviar_correo(destinatario, pdf_path, folio_cliente):
+    msg = MIMEMultipart()
+    msg['From'] = SMTP_USER
+    msg['To'] = destinatario
+    msg['Subject'] = f"Tu Dictamen KRONOS - Folio {folio_cliente}"
+    body = "Gracias por tu compra. Adjunto tu dictamen pericial."
+    msg.attach(MIMEText(body, 'plain'))
+    with open(pdf_path, "rb") as f:
+        part = MIMEBase('application', 'octet-stream')
+        part.set_payload(f.read())
+        encoders.encode_base64(part)
+        part.add_header('Content-Disposition', f'attachment; filename="{pdf_path.split("/")[-1]}"')
+        msg.attach(part)
+    server = smtplib.SMTP(SMTP_HOST, SMTP_PORT)
+    server.starttls()
+    server.login(SMTP_USER, SMTP_PASS)
+    server.send_message(msg)
+    server.quit()
 
-# ------- NUEVO ENDPOINT: /api/create_preference -------
-@app.route('/api/create_preference', methods=['POST'])
-def create_preference():
-    if not MP_ACCESS_TOKEN:
-        return jsonify({"error": "missing access token"}), 500
+# --- Validación de firma ---
+def validar_firma(request):
+    x_signature = request.headers.get("x-signature", "")
+    x_request_id = request.headers.get("x-request-id", "")
+    x_timestamp = request.headers.get("x-timestamp", "")
+    data_id = request.args.get("data.id", "")
+    if not MP_WEBHOOK_SECRET or not x_signature:
+        return False
+    manifest = f"id:{data_id};request-id:{x_request_id};ts:{x_timestamp};"
+    signature_parts = dict(item.split("=") for item in x_signature.split(","))
+    expected = hmac.new(MP_WEBHOOK_SECRET.encode(), manifest.encode(), hashlib.sha256).hexdigest()
+    return hmac.compare_digest(signature_parts.get("v1", ""), expected)
 
-    body = request.get_json(silent=True) or {}
-    nivel = int(body.get("nivel", 1))
-    folio = str(body.get("folio", "5204160405358537"))
+# --- Webhook principal ---
+@app.route("/webhook/mp", methods=["POST"])
+def mp_webhook():
+    if not validar_firma(request):
+        return jsonify({"error": "Invalid signature"}), 401
+    data = request.get_json()
+    if data and data.get("type") == "payment":
+        payment_id = data["data"]["id"]
+        payment_info = sdk.payment().get(payment_id)
+        status = payment_info["response"]["status"]
+        if status == "approved":
+            email_cliente = payment_info["response"]["payer"]["email"]
+            op_id = payment_id
+            folio_cliente = f"{FOLIO_BASE}-{op_id}"
+            pdf_path = generar_pdf(folio_cliente, op_id, email_cliente)
+            enviar_correo(email_cliente, pdf_path, folio_cliente)
+            print(f"💰 Pago {payment_id} aprobado. PDF enviado a {email_cliente}")
+    return jsonify({"status": "ok"}), 200
 
-    if nivel not in PRECIOS:
-        return jsonify({"error": "invalid nivel"}), 400
-
-    sdk = mercadopago.SDK(MP_ACCESS_TOKEN)
-
-    preference_data = {
-        "items": [{
-            "title": TITULOS[nivel],
-            "quantity": 1,
-            "unit_price": PRECIOS[nivel],
-            "currency_id": "MXN",
-        }],
-        "external_reference": folio,
-        "back_urls": {
-            "success": os.getenv("MP_SUCCESS_URL"),
-            "failure": os.getenv("MP_FAILURE_URL"),
-            "pending": os.getenv("MP_PENDING_URL"),
-        },
-        "auto_return": "approved",
-    }
-
-    result = sdk.preference().create(preference_data)
-    pref = result.get("response") or {}
-
-    return jsonify({
-        "preference_id": pref.get("id"),
-        "init_point": pref.get("init_point"),
-    }), 200
-
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=8081, debug=True)
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=int(os.getenv("PORT", 8080)))
