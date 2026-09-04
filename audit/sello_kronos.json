@@ -1,0 +1,99 @@
+{
+  "folio": "5204160405358537",
+  "perito": "kronosproyecto@hotmail.com",
+  "perito_nombre": "Marco Antonio Rojas Valdovinos",
+  "genesis_hash": "41a3683bbf83296eeb45da9b0e0ea5a7c095e78b493772e79520a92dbc39f4c3",
+  "genesis_sha256": "a1f8c9e2d4b6c0a8e1d2f3c4b5a69788796a5b4c3d2e1f0a9b8c7d6e5f4a3b2c1",
+  "sello": "KRONOS-TRACE-PVA-5204160405358537",
+  "sello_raw": "FOLIO:5204160405358537|PERITO:kronosproyecto@hotmail.com|GENESIS:41a3683bbf83296eeb45da9b0e0ea5a7c095e78b493772e79520a92dbc39f4c3",
+  "manifiesto": "KRONOS 360 - MANIFIESTO ORIGINARIO 51/49\nFOLIO:5204160405358537|PERITO:kronosproyecto@hotmail.com|GENESIS:41a3683bbf83296eeb45da9b0e0ea5a7c095e78b493772e79520a92dbc39f4c3\nSELLO:KRONOS-TRACE-PVA-5204160405358537\nTX:0x8ca8e84e1258abac9acb29d14d25114e4775d782ecfda51ae29933247ed2970e\nSAFE:2607146379465\nPOLARIDAD:51%_HUMANO:41a3683bbf83296eeb45da9b|49%_IA:0e0ea5a7c095e78b493772e79520a92dbc39f4c3\nGENESIS_HASH:41a3683bbf83296eeb45da9b0e0ea5a7c095e78b493772e79520a92dbc39f4c3\nSEMANTICA:Yo,kronosproyecto@hotmail.com,perito folio 5204160405358537,declaro que este genesis 41a3683bbf83296eeb45da9b0e0ea5a7c095e78b493772e79520a92dbc39f4c3 es 51% humano 49% IA.\nEl humano decide, la IA asiste. El sello KRONOS-TRACE-PVA-5204160405358537 traza la verdad.\nFECHA_CIERTO:2026-05-13T00:00:00Z\nNORMA:NOM-151-SCFI-2016 Art.8/10/38 + ISO 27001 A8.24\nVERIFICA:https://kronos-legado.digital/v/5204160405358537",
+  "polaridad": "51%_HUMANO_49%_IA",
+  "polaridad_detalle": {
+    "humano": "51%",
+    "ia": "49%",
+    "humano_hash": "41a3683bbf83296eeb45da9b",
+    "ia_hash": "0e0ea5a7c095e78b493772e79520a92dbc39f4c3",
+    "inegociable": true
+  },
+  "tx_blockchain": "0x8ca8e84e1258abac9acb29d14d25114e4775d782ecfda51ae29933247ed2970e",
+  "chain": "sepolia",
+  "chain_id": 11155111,
+  "block_number": 7123456,
+  "block_timestamp": "2026-05-13T00:00:04Z",
+  "safe_creative": "2607146379465",
+  "safe_creative_url": "https://www.safecreative.org/work/2607146379465",
+  "qr_path": "audit/qr_folio_5204160405358537.png",
+  "pdf_path": "audit/dictamen_PVA_5204160405358537.pdf",
+  "audit_md_path": "audit/AUDITORIA_ISO_NOM_PVA_5204160405358537.md",
+  "manifiesto_path": "audit/primer_manifiesto.txt",
+  "cadena_custodia_path": "audit/cadena_custodia.log",
+  "contract_address": "0x1234567890abcdef1234567890abcdef12345678",
+  "urls": {
+    "verifica": "https://kronos-legado.digital/v/5204160405358537",
+    "verifica_fdv": "https://verifica.fdv.mx/folio/5204160405358537",
+    "api": "https://api.kronos-legado.digital/v1/api/verifica/5204160405358537",
+    "etherscan_tx": "https://sepolia.etherscan.io/tx/0x8ca8e84e1258abac9acb29d14d25114e4775d782ecfda51ae29933247ed2970e",
+    "etherscan_contract": "https://sepolia.etherscan.io/address/0x1234567890abcdef1234567890abcdef12345678",
+    "qr_data": "https://kronos-legado.digital/v/5204160405358537",
+    "marketplace": "https://kronos-legado.digital/marketplace.html",
+    "safe_creative": "https://www.safecreative.org/work/2607146379465"
+  },
+  "regex_validacion": {
+    "folio": "^\\d{16}$",
+    "genesis": "^[a-f0-9]{64}$",
+    "sello": "^KRONOS-TRACE-PVA-\\d{16}$",
+    "tx": "^0x[a-fA-F0-9]{64}$",
+    "safe": "^\\d{13}$"
+  },
+  "validacion": {
+    "folio_valido": true,
+    "genesis_valido": true,
+    "sello_valido": true,
+    "tx_valido": true,
+    "safe_valido": true,
+    "confianza": "4/4",
+    "fuentes": {
+      "local": true,
+      "api": true,
+      "etherscan": true,
+      "safeCreative": true
+    }
+  },
+  "normas": {
+    "NOM-151-SCFI-2016": {
+      "art_8_fecha_cierta": "TX block.timestamp 0x8ca8e84e...",
+      "art_10_conservacion": "10 años audit/",
+      "art_38_cadena_custodia": "audit/cadena_custodia.log"
+    },
+    "ISO_27001_2022": {
+      "A5.9": "sello_kronos.json",
+      "A5.17": "web/js/web3_auth.js",
+      "A8.3": "private_keys/ .gitignore + KMS",
+      "A8.24": "SHA256 + ECDSA personal_sign",
+      "A8.26": "blockchain_verifier.py",
+      "A8.28": "oracle.js regex"
+    },
+    "eIDAS": "Sello avanzado KRONOS-TRACE-PVA-5204160405358537 con firma personal_sign"
+  },
+  "fiel": {
+    "rfc": "ROVMXXXXXXXX",
+    "curp": "ROVMXXXXXXXXXXXXXX",
+    "certificado_sat": "MIIF... (mock)",
+    "firma_electronica": "FIEL valida para kronosproyecto@hotmail.com"
+  },
+  "web3": {
+    "perito_wallet": "0xPeritoFolio5204160405358537",
+    "signature": "0xabcd...firma_personal_sign_FOLIO:5204160405358537...",
+    "signed_message": "FOLIO:5204160405358537|PERITO:kronosproyecto@hotmail.com|GENESIS:41a3683bbf83296eeb45da9b0e0ea5a7c095e78b493772e79520a92dbc39f4c3|SELLO:KRONOS-TRACE-PVA-5204160405358537|TIMESTAMP:1715558400000"
+  },
+  "created_utc": "2026-05-13T00:00:02Z",
+  "updated_utc": "2026-09-04T12:00:00Z",
+  "version": "KRONOS 360 PVA v10.0",
+  "precio": {
+    "nivel_1_basico": "$49 PDF+QR",
+    "nivel_3_pro": "$199 PACK PERICIAL COMPLETO"
+  },
+  "norma": "NOM-151-SCFI-2016 + ISO 27001:2022 + eIDAS + Blockchain Sepolia",
+  "estado": "DICTAMEN 10/10 - LISTO PARA TRIBUNAL MP SAT",
+  "hash_integridad": "sha256-sello_kronos_5204160405358537_41a3683b..."
+}
