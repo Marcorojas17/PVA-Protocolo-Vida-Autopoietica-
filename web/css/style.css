@@ -1,0 +1,211 @@
+/**
+ * PVA Style - KRONOS 360
+ * Folio: 5204160405358537
+ * Perito: kronosproyecto@hotmail.com
+ * Genesis: 41a3683bbf83296eeb45da9b0e0ea5a7c095e78b493772e79520a92dbc39f4c3
+ * Sello: KRONOS-TRACE-PVA-5204160405358537
+ */
+
+:root {
+  --pva-black: #0a0a0a;
+  --pva-white: #fafafa;
+  --pva-gold: #d4af37;
+  --pva-gold-light: #f3e5ab;
+  --pva-gray: #6b7280;
+  --pva-gray-light: #f3f4f6;
+  --pva-green: #10b981;
+  --pva-red: #ef4444;
+  --pva-folio: "5204160405358537";
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Inter', 'JetBrains Mono', system-ui, -apple-system, sans-serif;
+  background: var(--pva-white);
+  color: var(--pva-black);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Header pericial */
+.pva-header {
+  background: var(--pva-black);
+  color: var(--pva-white);
+  padding: 16px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 3px solid var(--pva-gold);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.pva-header h1 {
+  font-size: 14px;
+  letter-spacing: 2px;
+  font-weight: 700;
+}
+.pva-header h1::after {
+  content: " FOLIO " var(--pva-folio);
+  color: var(--pva-gold);
+  font-family: monospace;
+  font-size: 11px;
+  margin-left: 12px;
+}
+.pva-header .perito {
+  font-size: 10px;
+  color: var(--pva-gray);
+  font-family: monospace;
+}
+
+/* Card verificación - core */
+.pva-card {
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-left: 4px solid var(--pva-black);
+  border-radius: 8px;
+  padding: 20px;
+  margin: 16px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  max-width: 680px;
+}
+.pva-card.pva-valid {
+  border-left-color: var(--pva-green);
+  background: linear-gradient(135deg, #ffffff 0%, #f0fdf4 100%);
+}
+.pva-card.pva-invalid {
+  border-left-color: var(--pva-red);
+  background: #fef2f2;
+}
+.pva-card h3 {
+  font-size: 13px;
+  letter-spacing: 1px;
+  margin-bottom: 12px;
+  font-weight: 700;
+}
+.pva-card p {
+  font-size: 12px;
+  margin: 6px 0;
+  word-break: break-all;
+}
+.pva-card code {
+  background: var(--pva-gray-light);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--pva-black);
+}
+
+/* Botones perito */
+#btn-login, .pva-btn {
+  background: var(--pva-black);
+  color: var(--pva-white);
+  border: 1px solid var(--pva-black);
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: monospace;
+}
+#btn-login:hover, .pva-btn:hover {
+  background: var(--pva-white);
+  color: var(--pva-black);
+}
+.pva-btn-gold {
+  background: var(--pva-gold);
+  color: var(--pva-black);
+  border-color: var(--pva-gold);
+}
+.pva-btn-gold:hover {
+  background: var(--pva-gold-light);
+}
+
+/* QR */
+.pva-qr {
+  display: flex;
+  justify-content: center;
+  padding: 16px;
+  background: white;
+  border: 1px dashed var(--pva-gray);
+  border-radius: 8px;
+  margin: 16px;
+}
+.pva-qr img {
+  width: 180px;
+  height: 180px;
+  image-rendering: pixelated;
+}
+
+/* Folio highlight - oráculo */
+span[data-folio="5204160405358537"], .pva-folio-highlight {
+  background: var(--pva-gold-light) !important;
+  border: 1px solid var(--pva-gold) !important;
+  padding: 1px 4px;
+  border-radius: 3px;
+  font-family: monospace;
+  font-weight: 700;
+  cursor: help;
+}
+
+/* Status */
+#verifica-status {
+  font-family: monospace;
+  font-size: 11px;
+  color: var(--pva-gray);
+  padding: 8px 16px;
+  min-height: 24px;
+}
+#verifica-status::before {
+  content: "● ";
+  color: var(--pva-green);
+  animation: pulse 2s infinite;
+}
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+/* Grid auditoría */
+.pva-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+  padding: 16px;
+}
+
+/* Sello footer */
+.pva-footer {
+  margin-top: 40px;
+  padding: 24px;
+  background: var(--pva-black);
+  color: var(--pva-gray);
+  font-family: monospace;
+  font-size: 9px;
+  text-align: center;
+  line-height: 1.8;
+}
+.pva-footer b { color: var(--pva-gold); }
+
+/* Responsive */
+@media (max-width: 640px) {
+  .pva-header { flex-direction: column; align-items: flex-start; gap: 4px; }
+  .pva-header h1::after { display: block; margin-left: 0; margin-top: 4px; }
+  .pva-card { margin: 12px; padding: 16px; }
+  .pva-grid { grid-template-columns: 1fr; }
+}
+
+/* Print - para dictamen PDF web */
+@media print {
+  .pva-header { background: white !important; color: black !important; border-bottom: 2px solid black; }
+  #btn-login, .pva-btn { display: none; }
+  .pva-card { box-shadow: none; border: 1px solid black; }
+  body::after {
+    content: "FOLIO:5204160405358537 | SELLO:KRONOS-TRACE-PVA-5204160405358537 | PERITO:kronosproyecto@hotmail.com | GENESIS:41a3683bbf83296eeb45da9b0e0ea5a7c095e78b493772e79520a92dbc39f4c3";
+    position: fixed;
+    bottom: 0;
+    font-size: 6px;
+    font-family: monospace;
+  }
+}
