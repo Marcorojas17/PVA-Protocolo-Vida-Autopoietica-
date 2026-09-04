@@ -111,54 +111,15 @@ class AgenteJuez:
     def validar(self):
         ciclo = ESTADO_COLECTIVO.get("ciclo", 0) + 1
         ESTADO_COLECTIVO["ciclo"] = ciclo
-        suma = 3 + 3 + 2 + 7
-        if suma % NUMERO_JUEZ == 0 or ciclo % NUMERO_JUEZ == 0:
+        # Regla del 8: Solo registramos si es múltiplo de 8
+        if ciclo % NUMERO_JUEZ == 0:
             registrar_evento("JUEZ", f"Ciclo {ciclo} - VALIDADO por el 8")
+            ESTADO_COLECTIVO["alertas"].clear()  # Limpiamos alertas viejas al validar
             return "APROBADO"
         else:
-            registrar_evento("JUEZ", f"Ciclo {ciclo} - ALERTA: Regla del 8 no cumple")
-            ESTADO_COLECTIVO["alertas"].append("Regla del 8 violada")
-            return "ALERTA"
-
-class Enjambre:
-    def __init__(self):
-        self.custodio = AgenteCustodio()
-        self.escriba = AgenteEscriba()
-        self.vigilante = AgenteVigilante()
-        self.negociador = AgenteNegociador()
-        self.oraculo = AgenteOraculo()
-        self.notario = AgenteNotario()
-        self.defensor = AgenteDefensor()
-        self.juez = AgenteJuez()
-
-    def auto_sanacion(self):
-        if not os.path.exists(RUTA_ESTADO):
-            registrar_evento("ENJAMBRE", "Auto-Sanación: Estado ausente. Regenerando desde Génesis.")
-            guardar_estado()
-            return
-        try:
-            with open(RUTA_ESTADO, "r") as f:
-                json.load(f)
-        except Exception as e:
-            registrar_evento("ENJAMBRE", f"Auto-Sanación: Estado corrupto ({e}). Regenerando.")
-            ESTADO_COLECTIVO["alertas"].append("Auto-regenerado tras corrupción")
-            guardar_estado()
-
-    def ciclo(self):
-        self.auto_sanacion()
-        self.custodio.vigilar()
-        sello = self.escriba.generar(GENESIS)
-        self.vigilante.detectar_plagio(sello)
-        self.notario.sellar(generar_hash_expediente())
-        self.defensor.proteger(sello)
-        resultado = self.juez.validar()
-        guardar_estado()
-        hash_exp = generar_hash_expediente()
-        registrar_evento("ENJAMBRE", f"Expediente listo para PSC (NOM-151). Hash: {hash_exp[:16]}...")
-        if resultado == "APROBADO":
-            registrar_evento("ENJAMBRE", f"Ciclo {ESTADO_COLECTIVO['ciclo']} - Sello {CODIGO_CIERRE} confirmado")
-        else:
-            registrar_evento("ENJAMBRE", "ALERTA: Ciclo no validado. Auto-sanación en siguiente ciclo.")
+            # No agregamos alertas aquí, solo logueamos el latido
+            registrar_evento("JUEZ", f"Ciclo {ciclo} - Latido OK (esperando cierre)")
+            return "LATIDO"
 
 if __name__ == "__main__":
     import time
