@@ -1,133 +1,108 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>KRONOS 360 PVA | Dictamen Pericial Informático Folio 5204160405358537</title>
-<meta name="description" content="Dictamen PVA folio 5204160405358537 | Perito kronosproyecto@hotmail.com | Genesis 41a3683b... | Sello KRONOS-TRACE-PVA-5204160405358537 | TX 0x8ca8e84e... | 51% humano 49% IA | NOM-151 + ISO 27001">
-<link rel="stylesheet" href="./css/style.css">
-<style>
-  .hero{padding:56px 24px;text-align:center;background:radial-gradient(ellipse at top, #fff 0%, #f3f4f6 100%);border-bottom:1px solid #e5e7eb}
-  .hero h1{font-size:32px;letter-spacing:3px;font-weight:900;line-height:1.1}
-  .hero .folio{font-family:monospace;font-size:13px;background:black;color:#d4af37;padding:6px 12px;border-radius:99px;display:inline-block;margin-top:16px}
-  .hero .genesis{font-family:monospace;font-size:10px;color:#6b7280;margin-top:12px;word-break:break-all;max-width:700px;margin-inline:auto}
-  .grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;padding:24px;max-width:1100px;margin:0 auto}
-  .cta{padding:24px;text-align:center}
-  .cta a{text-decoration:none}
-  .kpi{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:20px}
-  .kpi span{font-family:monospace;font-size:10px;background:white;border:1px solid #e5e7eb;padding:6px 10px;border-radius:6px}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>⚛️ Oráculo Bio-Criptográfico KRONOS</title>
+    <style>
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body {
+            font-family:'Segoe UI', system-ui, sans-serif;
+            background:#000; color:#fff; overflow-x:hidden;
+            display:flex; flex-direction:column; align-items:center; justify-content:center;
+            min-height:100vh;
+        }
+
+        #canvas {
+            position:fixed; top:0; left:0; width:100vw; height:100vh; z-index:0; pointer-events:none;
+        }
+
+        .overlay {
+            position:relative; z-index:10; text-align:center; padding:2rem;
+            max-width:900px; width:90%; background:rgba(0,10,5,0.55);
+            backdrop-filter: blur(12px); border:1px solid rgba(0,255,150,0.25);
+            border-radius:32px; box-shadow:0 0 80px rgba(0,255,150,0.15);
+        }
+
+        h1 {
+            font-size: clamp(2rem, 6vw, 4rem); font-weight:800; letter-spacing:4px;
+            background:linear-gradient(135deg,#00ffcc,#d4af37);
+            -webkit-background-clip:text; background-clip:text; color:transparent;
+            margin-bottom:0.5rem; text-shadow:0 0 30px rgba(0,255,150,0.3);
+        }
+
+        .subtitle { color:#9ad; font-size:1rem; margin-bottom:1.5rem; }
+
+        .legal-block {
+            font-size:0.75rem; color:#8a8a8a; border-top:1px solid #2a2a2a;
+            border-bottom:1px solid #2a2a2a; padding:0.8rem 0; margin-bottom:1.5rem; line-height:1.7;
+        }
+        .legal-block strong { color:#00ffcc; }
+
+        .input-wrap { display:flex; gap:10px; flex-wrap:wrap; justify-content:center; margin-bottom:1rem; }
+        input {
+            flex:1 1 300px; padding:16px 20px; font-size:1rem; border-radius:60px;
+            border:1px solid #00ffcc; background:rgba(0,0,0,0.6); color:#fff;
+            outline:none; text-align:center; letter-spacing:1px;
+            transition:border-color 0.3s;
+        }
+        input:focus { border-color:#d4af37; }
+
+        button {
+            padding:16px 36px; font-size:1rem; font-weight:800; border:none; border-radius:60px;
+            background:linear-gradient(135deg,#00ffcc,#d4af37); color:#000; cursor:pointer;
+            transition:transform 0.2s, box-shadow 0.2s;
+        }
+        button:hover { transform:scale(1.05); box-shadow:0 8px 30px rgba(212,175,55,0.4); }
+
+        #oracle-output {
+            display:none; margin-top:2rem; text-align:left; background:rgba(0,0,0,0.7);
+            border:1px solid #00ffcc; border-radius:20px; padding:2rem;
+            font-family:'Courier New',monospace; white-space:pre-wrap; font-size:0.9rem;
+            line-height:1.7; box-shadow:0 0 60px rgba(0,255,150,0.1);
+        }
+
+        #seal {
+            display:none; margin-top:1rem; font-size:1rem; font-weight:bold; color:#d4af37;
+            text-shadow:0 0 20px #d4af37; animation:glow 2s infinite alternate;
+        }
+        @keyframes glow { from { text-shadow:0 0 10px #d4af37; } to { text-shadow:0 0 30px #d4af37, 0 0 60px #d4af37; } }
+
+        .footer-links { margin-top:2rem; font-size:0.7rem; color:#555; }
+        .footer-links a { color:#00ffcc; text-decoration:none; }
+
+        /* Animación de entrada del organismo */
+        .organism-visible { animation:breathe 4s ease-in-out infinite; }
+        @keyframes breathe { 0%,100%{ transform:scale(1);} 50%{ transform:scale(1.05);} }
+    </style>
 </head>
 <body>
+    <canvas id="canvas"></canvas>
 
-<header class="pva-header">
-  <h1>KRONOS 360</h1>
-  <span class="perito">kronosproyecto@hotmail.com | PVA PROTOCOLO VIDA AUTOPOIÉTICA</span>
-</header>
+    <div class="overlay">
+        <h1>⚛️ ORÁCULO BIO-CRIPTOGRÁFICO</h1>
+        <p class="subtitle">Protocolo de Vida Autopoiética (PVA) · KRONOS TRACE</p>
 
-<section class="hero">
-  <h1>DICTAMEN PERICIAL<br>INFORMÁTICO</h1>
-  <div class="folio">FOLIO: 5204160405358537 | SELLO: KRONOS-TRACE-PVA-5204160405358537</div>
-  <div class="genesis">
-    GENESIS: 41a3683bbf83296eeb45da9b0e0ea5a7c095e78b493772e79520a92dbc39f4c3<br>
-    TX: 0x8ca8e84e1258abac9acb29d14d25114e4775d782ecfda51ae29933247ed2970e | SAFE: 2607146379465 | 51% HUMANO / 49% IA
-  </div>
-  <div class="kpi">
-    <span>✓ NOM-151 Art.8/10/38</span>
-    <span>✓ ISO 27001 A5.17 A8.28</span>
-    <span>✓ eIDAS Sello Avanzado</span>
-    <span>✓ Etherscan Sepolia</span>
-    <span>✓ QR Fecha Cierta</span>
-  </div>
-  <div class="cta">
-    <a href="./marketplace.html" class="pva-btn pva-btn-gold" style="padding:14px 28px;font-size:14px;display:inline-block">COMPRAR DICTAMEN $49 / $199 →</a>
-    <a href="#verifica" class="pva-btn" style="padding:14px 28px;font-size:14px;display:inline-block;margin-left:8px">VERIFICAR FOLIO</a>
-  </div>
-  <div id="verifica-status" style="margin-top:16px">Oráculo PVA folio 5204160405358537...</div>
-</section>
+        <div class="legal-block">
+            <strong>PVA - Protocolo de Vida Autopoiética</strong><br>
+            Autor: Marco Antonio Rojas Valdovinos · Perito: kronosproyecto@hotmail.com<br>
+            Folio Maestro: 5204160405358537 · SafeCreative: 2607146379465<br>
+            NOM-024 · NOM-151 · ISO 27001 · ISO 9001
+        </div>
 
-<div class="grid3">
+        <div class="input-wrap">
+            <input type="text" id="hashInput" placeholder="Pega tu SHA-256 (64 caracteres)" maxlength="64">
+            <button onclick="invocarOracle()">🧬 Invocar Vida</button>
+        </div>
 
-  <div class="pva-card pva-valid">
-    <h3>¿QUÉ ES PVA?</h3>
-    <p style="font-size:12px">
-      Protocolo Vida Autopoiética. Manifiesto 51% humano / 49% IA sellado con <code>FOLIO:5204160405358537|PERITO:kronosproyecto@hotmail.com|GENESIS:41a3683b...</code>
-      y registrado en blockchain para fecha cierta NOM-151.
-    </p>
-    <p style="font-size:11px;margin-top:10px">
-      Cada dictamen es trazable en <a href="https://kronos-legado.digital/v/5204160405358537" target="_blank">kronos-legado.digital/v/5204160405358537</a> + verifica.fdv.mx + API + Etherscan.
-    </p>
-    <div style="font-family:monospace;font-size:9px;background:#f9fafb;padding:8px;border-radius:6px;margin-top:12px;word-break:break-all">
-      51%_HUMANO:41a3683bbf83296eeb45da9b... | 49%_IA:0e0ea5a7c095e78b493772e79... | POLARIDAD INNEGOCIABLE
+        <div id="oracle-output"></div>
+        <div id="seal"></div>
+
+        <div class="footer-links">
+            Verificación: <a href="https://marcorojas17.github.io/PVA-Protocolo-Vida-Autopoietica-/web/" target="_blank">marcorojas17.github.io</a>
+        </div>
     </div>
-  </div>
 
-  <div class="pva-card" id="verifica">
-    <h3>VERIFICACIÓN INSTANTÁNEA</h3>
-    <input id="folio-input" value="5204160405358537" style="width:100%;padding:10px;border:1px solid #ddd;border-radius:6px;font-family:monospace;font-size:12px">
-    <button class="pva-btn" style="width:100%;margin-top:8px" onclick="if(window.PVA) PVA.verificaFolio(document.getElementById('folio-input').value)">VERIFICAR EN BLOCKCHAIN</button>
-    <div id="verifica-result" style="margin-top:12px"></div>
-    <div class="pva-qr" style="margin-top:12px">
-      <img src="../audit/qr_folio_5204160405358537.png" alt="QR 5204160405358537" onerror="this.src='https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=https://kronos-legado.digital/v/5204160405358537'">
-    </div>
-  </div>
-
-  <div class="pva-card">
-    <h3>PERITO CERTIFICADO</h3>
-    <p style="font-size:12px">
-      <b>Marco Antonio Rojas Valdovinos</b><br>
-      Perito Informático Folio 5204160405358537<br>
-      kronosproyecto@hotmail.com<br>
-      FIEL SAT + Wallet Sepolia
-    </p>
-    <div style="margin-top:12px;display:flex;gap:8px;align-items:center">
-      <button id="btn-login">Login Perito</button>
-      <span id="user-info" style="font-size:9px;font-family:monospace"></span>
-    </div>
-    <p style="font-size:9px;color:#6b7280;margin-top:12px">
-      Login con Web3Auth + firma <code>personal_sign</code> del sello KRONOS-TRACE-PVA-5204160405358537<br>
-      <a href="https://sepolia.etherscan.io/tx/0x8ca8e84e1258abac9acb29d14d25114e4775d782ecfda51ae29933247ed2970e" target="_blank">TX maestra Etherscan</a>
-    </p>
-  </div>
-
-</div>
-
-<section style="max-width:1100px;margin:0 auto;padding:0 24px 24px">
-  <div class="pva-card" style="border-left-color:var(--pva-gold)">
-    <h3>MANIFIESTO ORIGINARIO 51/49 - PRUEBA PERICIAL</h3>
-    <pre id="manifiesto-preview" style="font-size:9px;background:#0a0a0a;color:#d4af37;padding:12px;border-radius:6px;overflow:auto;white-space:pre-wrap;max-height:220px">Cargando audit/primer_manifiesto.txt folio 5204160405358537...</pre>
-  </div>
-</section>
-
-<div class="cta" style="padding-bottom:40px">
-  <a href="./marketplace.html" class="pva-btn pva-btn-gold" style="padding:16px 32px;font-size:16px">IR AL MARKETPLACE → DICTAMEN $199 COMPLETO</a>
-  <p style="font-size:10px;color:#6b7280;margin-top:12px;font-family:monospace">Entrega: dictamen_PVA_5204160405358537.pdf + AUDITORIA_ISO_NOM_PVA_5204160405358537.md + sello_kronos.json + cadena_custodia.log</p>
-</div>
-
-<footer class="pva-footer">
-  KRONOS 360 PVA | FOLIO:5204160405358537 | SELLO:KRONOS-TRACE-PVA-5204160405358537 | PERITO:kronosproyecto@hotmail.com<br>
-  GENESIS:41a3683bbf83296eeb45da9b0e0ea5a7c095e78b493772e79520a92dbc39f4c3 | TX:0x8ca8e84e1258abac9acb29d14d25114e4775d782ecfda51ae29933247ed2970e | SAFE:2607146379465<br>
-  NOM-151-SCFI-2016 Art.8,10,38 + ISO 27001:2022 A5.9 A5.17 A8.3 A8.24 A8.26 A8.28 + eIDAS | 51% HUMANO 49% IA | https://kronos-legado.digital/v/5204160405358537
-</footer>
-
-<script src="./js/web3_auth.js"></script>
-<script src="./js/oracle.js"></script>
-<script src="./js/app.js"></script>
-<script>
-// Preview manifiesto
-fetch('../audit/primer_manifiesto.txt?v='+Date.now()).then(r=>r.text()).then(t=>{
-  document.getElementById('manifiesto-preview').textContent = t.slice(0,2000);
-}).catch(()=>{
-  document.getElementById('manifiesto-preview').textContent = `KRONOS 360 - MANIFIESTO ORIGINARIO 51/49
-FOLIO:5204160405358537|PERITO:kronosproyecto@hotmail.com|GENESIS:41a3683bbf83296eeb45da9b0e0ea5a7c095e78b493772e79520a92dbc39f4c3
-SELLO:KRONOS-TRACE-PVA-5204160405358537
-TX:0x8ca8e84e1258abac9acb29d14d25114e4775d782ecfda51ae29933247ed2970e
-SAFE:2607146379465
-POLARIDAD:51%_HUMANO:41a3683bbf83296eeb45da9b|49%_IA:0e0ea5a7c095e78b493772e79520a92dbc39f4c3
-FECHA_CIERTO:${new Date().toISOString()}Z
-VERIFICA:https://kronos-legado.digital/v/5204160405358537`;
-});
-</script>
-
+    <script src="oracle.js"></script>
 </body>
 </html>
