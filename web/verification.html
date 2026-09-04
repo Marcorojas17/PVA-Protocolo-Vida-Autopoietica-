@@ -24,41 +24,31 @@
     <div class="container">
         <h1>🔍 VERIFICACIÓN PÚBLICA</h1>
         <div class="meta">Folio maestro: 5204160405358537 | SafeCreative: 2607146379465</div>
-        <input type="text" id="searchInput" placeholder="Pega aquí tu folio o hash (ej. 5204160405358537)">
+        <input type="text" id="searchInput" placeholder="Pega aquí tu folio (ej. 5204160405358537)">
         <br>
         <button onclick="verificar()">VERIFICAR EN BLOCKCHAIN</button>
         <div id="result"></div>
         <a href="https://marcorojas17.github.io/PVA-Protocolo-Vida-Autopoietica-/" class="back">← Ir al Marketplace</a>
     </div>
     <script>
-        const FOLIO_MAESTRO = "5204160405358537";
-        const HASH_GENESIS = "41a3683bbf83296eeb45da9b0e0ea5a7c095e78b493772e79520a92dbc39f4c3";
+        const FOLIO = "5204160405358537";
+        const HASH = "41a3683bbf83296eeb45da9b0e0ea5a7c095e78b493772e79520a92dbc39f4c3";
         const PERITO = "kronosproyecto@hotmail.com";
 
         function verificar() {
             const input = document.getElementById('searchInput').value.trim();
-            const resultDiv = document.getElementById('result');
-            resultDiv.style.display = 'block';
+            const div = document.getElementById('result');
+            div.style.display = 'block';
 
-            if (input === FOLIO_MAESTRO || input === HASH_GENESIS) {
-                resultDiv.innerHTML = `
-                    <span class="success">✅ FOLIO VALIDADO</span><br>
-                    <strong>Folio:</strong> ${FOLIO_MAESTRO}<br>
-                    <strong>Perito:</strong> ${PERITO}<br>
-                    <strong>Hash:</strong> ${HASH_GENESIS.substring(0,16)}...<br>
-                    <strong>Estado:</strong> En blockchain<br>
-                    <strong>Sello:</strong> KRONOS-TRACE-PVA-${FOLIO_MAESTRO}<br><br>
-                    <span style="color:#00ffcc;">Cadena de custodia verificada</span><br>
-                    <span style="color:#00ffcc;">✅ Transacción confirmada en Ethereum</span><br>
-                    <span style="color:#00ffcc;">✅ Certificado ISO integrado</span>
-                `;
-                resultDiv.style.borderColor = "#00ffcc";
+            if (input === FOLIO || input === HASH) {
+                div.innerHTML = `<span class="success">✅ FOLIO VALIDADO</span><br><strong>Folio:</strong> ${FOLIO}<br><strong>Perito:</strong> ${PERITO}<br><strong>Hash:</strong> ${HASH.substring(0,16)}...<br><strong>Estado:</strong> En blockchain<br><strong>Sello:</strong> KRONOS-TRACE-PVA-${FOLIO}`;
+                div.style.borderColor = "#00ffcc";
             } else if (input === "") {
-                resultDiv.innerHTML = `<span class="error">⚠️ Ingresa un folio o hash para verificar.</span>`;
-                resultDiv.style.borderColor = "#ffcc00";
+                div.innerHTML = `<span class="error">⚠️ Ingresa un folio o hash.</span>`;
+                div.style.borderColor = "#ffcc00";
             } else {
-                resultDiv.innerHTML = `<span class="error">❌ FOLIO NO ENCONTRADO</span><br>El valor "${input}" no está registrado en blockchain.`;
-                resultDiv.style.borderColor = "#ff4444";
+                div.innerHTML = `<span class="error">❌ NO ENCONTRADO: "${input}"</span>`;
+                div.style.borderColor = "#ff4444";
             }
         }
     </script>
