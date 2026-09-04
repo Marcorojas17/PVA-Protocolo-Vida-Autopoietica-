@@ -1,147 +1,330 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Marketplace PVA - Folio 5204160405358537 | KRONOS 360</title>
-<link rel="stylesheet" href="./css/style.css">
-<style>
-  .market-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:20px;padding:24px;max-width:1100px;margin:0 auto}
-  .price{font-size:28px;font-weight:800;font-family:monospace}
-  .price small{font-size:12px;color:var(--pva-gray)}
-  .badge{font-size:9px;background:var(--pva-black);color:white;padding:3px 8px;border-radius:99px;letter-spacing:1px}
-  .badge-gold{background:var(--pva-gold);color:black}
-  .features{font-size:12px;margin:12px 0;line-height:1.9;list-style:none}
-  .features li::before{content:"✓ ";color:var(--pva-green);font-weight:700}
-  .sello-box{font-family:monospace;font-size:9px;background:#f3f4f6;padding:10px;border-radius:6px;word-break:break-all;margin-top:12px}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KRONOS 360 | NeuroMarket</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background: #000000;
+            color: #ffffff;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            overflow-x: hidden;
+            min-height: 100vh;
+            cursor: crosshair;
+        }
+
+        /* Fondo con partículas de ADN */
+        #dnaCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 0;
+        }
+
+        /* Anillo de energía central */
+        .kronos-ring {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            border: 2px solid rgba(0, 255, 150, 0.2);
+            box-shadow: 0 0 40px rgba(0, 255, 150, 0.15);
+            z-index: 1;
+            animation: spin 20s linear infinite;
+            pointer-events: none;
+        }
+        .kronos-ring::before {
+            content: "KRONOS 360";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-20deg);
+            color: #D4AF37;
+            font-size: 1.5rem;
+            letter-spacing: 8px;
+            text-shadow: 0 0 20px #D4AF37;
+            font-weight: 900;
+        }
+        .kronos-ring::after {
+            content: "";
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            width: 20px;
+            height: 20px;
+            background: #00ffcc;
+            border-radius: 50%;
+            box-shadow: 0 0 15px #00ffcc;
+        }
+        @keyframes spin {
+            from { transform: translate(-50%, -50%) rotate(0deg); }
+            to { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
+        /* Contenedor principal */
+        .marketplace {
+            position: relative;
+            z-index: 10;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            gap: 2rem;
+            padding: 6rem 2rem;
+            min-height: 100vh;
+        }
+
+        /* Cápsulas de energía (Niveles) */
+        .capsule {
+            width: 280px;
+            height: 380px;
+            background: rgba(10, 20, 15, 0.7);
+            border: 1px solid rgba(0, 255, 150, 0.3);
+            border-radius: 40px;
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s ease, border-color 0.3s, box-shadow 0.3s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+        .capsule:hover {
+            transform: translateY(-15px);
+            border-color: #00ffcc;
+            box-shadow: 0 20px 60px rgba(0, 255, 150, 0.3);
+        }
+        .capsule::before {
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(0, 255, 150, 0.2) 0%, transparent 60%);
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+        }
+        .capsule:hover::before {
+            opacity: 1;
+        }
+
+        /* Etiqueta de nivel */
+        .level-label {
+            font-size: 0.8rem;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: #D4AF37;
+            border: 1px solid #D4AF37;
+            padding: 0.3rem 1rem;
+            border-radius: 30px;
+            margin-bottom: 1.5rem;
+            background: rgba(0, 0, 0, 0.5);
+        }
+
+        /* Nombre del servicio */
+        .service-name {
+            font-size: 1.8rem;
+            font-weight: 300;
+            text-align: center;
+            margin-bottom: 1rem;
+            letter-spacing: 2px;
+            color: #fff;
+        }
+
+        /* Precio en UVP */
+        .price {
+            font-size: 3.5rem;
+            font-weight: 900;
+            color: #00ffcc;
+            text-shadow: 0 0 30px rgba(0, 255, 150, 0.5);
+            margin-bottom: 1.5rem;
+        }
+        .price span {
+            font-size: 1rem;
+            font-weight: 300;
+            color: #aaa;
+            display: block;
+            letter-spacing: 2px;
+        }
+
+        /* Lista de características */
+        .features {
+            list-style: none;
+            text-align: left;
+            font-size: 0.8rem;
+            color: #bbb;
+            line-height: 2;
+            margin-bottom: 2rem;
+            padding: 0 1rem;
+        }
+        .features li::before {
+            content: "◆";
+            color: #00ffcc;
+            margin-right: 0.5rem;
+        }
+
+        /* Botón de compra holográfico */
+        .buy-btn {
+            background: linear-gradient(135deg, #00ffcc, #D4AF37);
+            color: #000;
+            border: none;
+            padding: 12px 40px;
+            border-radius: 50px;
+            font-weight: 800;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            opacity: 0.9;
+        }
+        .capsule:hover .buy-btn {
+            transform: scale(1.05);
+            box-shadow: 0 10px 30px rgba(0, 255, 150, 0.4);
+        }
+
+        /* Nivel 2: más destacado */
+        .capsule.featured {
+            border-color: #D4AF37;
+            background: linear-gradient(180deg, rgba(20, 30, 20, 0.9), rgba(0, 0, 0, 0.9));
+        }
+        .capsule.featured .price {
+            color: #D4AF37;
+            text-shadow: 0 0 30px rgba(212, 175, 55, 0.5);
+        }
+        .capsule.featured .level-label {
+            background: #D4AF37;
+            color: #000;
+        }
+
+        /* Footer */
+        .footer-info {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+            font-size: 0.7rem;
+            color: #666;
+            z-index: 10;
+            pointer-events: none;
+        }
+        .footer-info a {
+            color: #00ffcc;
+            text-decoration: none;
+        }
+    </style>
 </head>
 <body>
+    <canvas id="dnaCanvas"></canvas>
+    <div class="kronos-ring"></div>
 
-<header class="pva-header">
-  <h1>KRONOS 360 PVA MARKETPLACE</h1>
-  <span class="perito">kronosproyecto@hotmail.com | GENESIS: 41a3683b...f4c3</span>
-</header>
+    <div class="marketplace">
+        <!-- NIVEL 1 -->
+        <div class="capsule" onclick="alert('Nivel 1 seleccionado. Contacta a kronosproyecto@hotmail.com para proceder.')">
+            <div class="level-label">Nivel 1 · Inicial</div>
+            <div class="service-name">Dictamen<br>PDF + QR</div>
+            <div class="price">$49<span>USD / dictamen</span></div>
+            <ul class="features">
+                <li>PDF con folio 5204160405358537</li>
+                <li>QR verificación NOM-151</li>
+                <li>Sello KRONOS-TRACE-PVA</li>
+                <li>Validez MP / Fiscal / Civil</li>
+                <li>Entrega inmediata</li>
+            </ul>
+            <button class="buy-btn">COMPRAR NIVEL 1</button>
+        </div>
 
-<div id="verifica-status">Conectando oráculo folio 5204160405358537...</div>
+        <!-- NIVEL 2 (Destacado) -->
+        <div class="capsule featured">
+            <div class="level-label">Nivel 2 · Pro</div>
+            <div class="service-name">Dictamen<br>+ Auditoría ISO</div>
+            <div class="price">$199<span>USD / pack pericial</span></div>
+            <ul class="features">
+                <li>Todo el Nivel 1</li>
+                <li>Auditoría ISO 27001 + NOM-151</li>
+                <li>Verificación blockchain TX 0x8ca...</li>
+                <li>Sello KRONOS + cadena de custodia</li>
+                <li>SafeCreative + API + Etherscan</li>
+                <li>Defensa ante SAT / Tribunal</li>
+            </ul>
+            <button class="buy-btn">COMPRAR NIVEL 2</button>
+        </div>
 
-<section style="text-align:center;padding:32px 16px">
-  <h2 style="font-size:22px;letter-spacing:1px">DICTAMEN PERICIAL INFORMÁTICO PVA</h2>
-  <p style="font-size:12px;color:var(--pva-gray);margin-top:8px;font-family:monospace">
-    FOLIO: <b>5204160405358537</b> | SELLO: KRONOS-TRACE-PVA-5204160405358537 | TX: 0x8ca8e84e...2970e | SAFE: 2607146379465
-  </p>
-  <p style="font-size:11px;margin-top:12px;max-width:600px;margin-inline:auto">
-    51% humano / 49% IA. Verificable en <a href="https://kronos-legado.digital/v/5204160405358537" target="_blank">kronos-legado.digital/v/5204160405358537</a> + Etherscan + QR NOM-151
-  </p>
-</section>
-
-<div class="market-grid">
-
-  <!-- NIVEL 1 - $49 -->
-  <div class="pva-card pva-valid">
-    <span class="badge">NIVEL 1 - BÁSICO</span>
-    <h3 style="margin-top:12px">DICTAMEN PDF + QR</h3>
-    <div class="price">$49 USD <small>/ dictamen</small></div>
-    <ul class="features">
-      <li>PDF con folio 5204160405358537</li>
-      <li>QR verificación NOM-151</li>
-      <li>Sello KRONOS-TRACE-PVA</li>
-      <li>Genesis 41a3683b... + SHA256</li>
-      <li>Validez MP / fiscal / civil</li>
-      <li>Entrega inmediata</li>
-    </ul>
-    <div class="sello-box">
-      FOLIO:5204160405358537|PERITO:kronosproyecto@hotmail.com|GENESIS:41a3683bbf83296eeb45da9b0e0ea5a7c095e78b493772e79520a92dbc39f4c3
+        <!-- VERIFICACIÓN GRATUITA -->
+        <div class="capsule" onclick="alert('Introduce tu folio para verificar en blockchain.')">
+            <div class="level-label">Verificación</div>
+            <div class="service-name">Verifica<br>Tu Folio</div>
+            <div class="price">$0<span>GRATIS</span></div>
+            <ul class="features">
+                <li>Consulta en blockchain Ethereum</li>
+                <li>Valida integridad del sello</li>
+                <li>Comprueba autoría en SafeCreative</li>
+                <li>Instantáneo</li>
+            </ul>
+            <button class="buy-btn">VERIFICAR EN BLOCKCHAIN</button>
+        </div>
     </div>
-    <button class="pva-btn pva-btn-gold" style="width:100%;margin-top:16px" onclick="comprar(49,'basico')">
-      COMPRAR $49 - PDF + QR
-    </button>
-    <p style="font-size:9px;color:var(--pva-gray);margin-top:8px;text-align:center">Incluye: audit/dictamen_PVA_5204160405358537.pdf + qr_folio_5204160405358537.png</p>
-  </div>
 
-  <!-- NIVEL 2 - $199 - EL QUE VENDE -->
-  <div class="pva-card" style="border-left-color:var(--pva-gold);border-width:2px;transform:scale(1.02);box-shadow:0 8px 24px rgba(0,0,0,0.12)">
-    <span class="badge badge-gold">MÁS VENDIDO - NIVEL 3 PRO</span>
-    <h3 style="margin-top:12px">DICTAMEN + AUDITORÍA ISO + BLOCKCHAIN</h3>
-    <div class="price">$199 USD <small>/ pack pericial</small></div>
-    <ul class="features">
-      <li><b>Todo Nivel 1 +</b></li>
-      <li>AUDITORIA_ISO_NOM_PVA_5204160405358537.md</li>
-      <li>Verificación blockchain TX 0x8ca8e84e...</li>
-      <li>sello_kronos.json trazable</li>
-      <li>primer_manifiesto.txt 51/49</li>
-      <li>cadena_custodia.log NOM-151 Art.38</li>
-      <li>SafeCreative 2607146379465</li>
-      <li>API verifica.fdv.mx + Etherscan</li>
-      <li>Defensa ante SAT / Tribunal</li>
-    </ul>
-    <div class="sello-box">
-      SELLO:KRONOS-TRACE-PVA-5204160405358537|TX:0x8ca8e84e1258abac9acb29d14d25114e4775d782ecfda51ae29933247ed2970e|SAFE:2607146379465|51%_HUMANO_49%_IA
+    <div class="footer-info">
+        Autor: Marco Antonio Rojas Valdovinos · Perito: <a href="mailto:kronosproyecto@hotmail.com">kronosproyecto@hotmail.com</a> · Folio: 5204160405358537
     </div>
-    <button class="pva-btn" style="width:100%;margin-top:16px;background:var(--pva-black)" onclick="comprar(199,'pro')">
-      COMPRAR $199 - PACK PERICIAL COMPLETO
-    </button>
-    <p style="font-size:9px;color:var(--pva-gray);margin-top:8px;text-align:center">Checkout Web3Auth + FIEL | Folio maestro 5204160405358537</p>
-  </div>
 
-  <!-- VERIFICACIÓN GRATIS -->
-  <div class="pva-card">
-    <span class="badge">VERIFICACIÓN GRATUITA</span>
-    <h3 style="margin-top:12px">VERIFICA TU FOLIO</h3>
-    <div style="margin:12px 0">
-      <input id="folio-input" value="5204160405358537" placeholder="Ingresa folio 16 dígitos" style="width:100%;padding:10px;border:1px solid #ddd;border-radius:6px;font-family:monospace;font-size:12px">
-      <button class="pva-btn" style="width:100%;margin-top:8px" onclick="verificaInput()">VERIFICAR EN BLOCKCHAIN</button>
-    </div>
-    <div id="verifica-result"></div>
-    <div class="pva-qr">
-      <img src="../audit/qr_folio_5204160405358537.png" alt="QR Folio 5204160405358537" onerror="this.src='https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=https://kronos-legado.digital/v/5204160405358537'">
-    </div>
-    <p style="font-size:9px;text-align:center">
-      <a href="https://sepolia.etherscan.io/tx/0x8ca8e84e1258abac9acb29d14d25114e4775d782ecfda51ae29933247ed2970e" target="_blank">Ver TX en Etherscan</a> |
-      <a href="https://kronos-legado.digital/v/5204160405358537" target="_blank">Ver en FDV</a>
-    </p>
-    <div style="margin-top:12px;display:flex;gap:8px">
-      <button id="btn-login" style="flex:1">Login Perito</button>
-      <span id="user-info" style="font-size:9px;font-family:monospace;align-self:center"></span>
-    </div>
-  </div>
+    <script>
+        // Partículas de ADN flotando
+        const canvas = document.getElementById('dnaCanvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
 
-</div>
+        const particles = [];
+        for (let i = 0; i < 80; i++) {
+            particles.push({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                r: Math.random() * 2 + 0.5,
+                speedX: (Math.random() - 0.5) * 0.5,
+                speedY: (Math.random() - 0.5) * 0.5,
+                color: Math.random() > 0.5 ? '#00ffcc' : '#D4AF37'
+            });
+        }
 
-<footer class="pva-footer">
-  <b>KRONOS 360 PVA</b> | FOLIO:5204160405358537 | PERITO:kronosproyecto@hotmail.com<br>
-  GENESIS:41a3683bbf83296eeb45da9b0e0ea5a7c095e78b493772e79520a92dbc39f4c3 | SELLO:KRONOS-TRACE-PVA-5204160405358537<br>
-  TX:0x8ca8e84e1258abac9acb29d14d25114e4775d782ecfda51ae29933247ed2970e | SAFE:2607146379465 | NORMA:NOM-151 + ISO 27001 A5.17 A8.28 + eIDAS<br>
-  51% HUMANO / 49% IA - Cadena custodia: audit/cadena_custodia.log - Verificación: https://kronos-legado.digital/v/5204160405358537
-</footer>
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(p => {
+                p.x += p.speedX;
+                p.y += p.speedY;
+                if (p.x < 0 || p.x > canvas.width) p.speedX *= -1;
+                if (p.y < 0 || p.y > canvas.height) p.speedY *= -1;
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+                ctx.fillStyle = p.color;
+                ctx.shadowBlur = 10;
+                ctx.shadowColor = p.color;
+                ctx.fill();
+            });
+            requestAnimationFrame(animate);
+        }
+        animate();
 
-<script src="./js/web3_auth.js"></script>
-<script src="./js/oracle.js"></script>
-<script src="./js/app.js"></script>
-<script>
-function comprar(precio, nivel){
-  const folio = "5204160405358537";
-  if(!window.PVAWeb3Auth || !window.PVAWeb3Auth.isAuthenticated()){
-    alert(`Para comprar Nivel ${nivel.toUpperCase()} $${precio} debes autenticar como perito primero.\nFolio: ${folio}\n\nClick Login Perito.`);
-    document.getElementById("btn-login")?.click();
-    return;
-  }
-  const user = window.PVAWeb3Auth.getUser();
-  console.log(`[MARKET:${folio}] Compra ${nivel} $${precio} user ${user.account}`);
-  // Aquí Stripe / Crypto checkout real
-  const checkoutUrl = `https://buy.stripe.com/test_pva_${folio}_${nivel}?folio=${folio}&nivel=${nivel}&perito=${user.email}&genesis=41a3683bbf83296eeb45da9b0e0ea5a7c095e78b493772e79520a92dbc39f4c3`;
-  if(confirm(`PVA ${nivel.toUpperCase()} $${precio}\nFolio: ${folio}\nSello: KRONOS-TRACE-PVA-${folio}\n\n¿Ir a checkout? (demo)`)){
-    window.open(checkoutUrl, "_blank");
-    // Simula entrega
-    setTimeout(()=>alert(`Dictamen PVA ${folio} generado!\nDescarga: audit/dictamen_PVA_${folio}.pdf`), 800);
-  }
-}
-function verificaInput(){
-  const folio = document.getElementById("folio-input").value.trim();
-  if(window.PVA && window.PVA.verificaFolio) window.PVA.verificaFolio(folio);
-  else if(window.PVAOracle) window.PVAOracle.consultarOraculo(folio).then(r=>console.log(r));
-}
-</script>
-
+        // Reaccionar al tamaño de ventana
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+    </script>
 </body>
 </html>
