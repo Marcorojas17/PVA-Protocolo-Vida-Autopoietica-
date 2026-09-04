@@ -1,0 +1,33 @@
+MIT License
+
+Copyright (c) 2026 Marco Antonio Rojas Valdovinos (kronosproyecto@hotmail.com)
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+---
+
+COMMERCIAL ADDENDUM - KRONOS 360 - Folio 5204160405358537
+
+- core/, web/, contracts/, scripts/, tests/ = MIT (libre para usar/forkear)
+- audit/, prompts_library/, docs/KRONOS_360_LAWS.md = Propiedad de Marco Antonio Rojas Valdovinos
+  Requiere licencia comercial. Contacto: kronosproyecto@hotmail.com
+  SafeCreative ID: 2607146379465
+  Genesis SHA256: 41a3683bbf83296eeb45da9b0e0ea5a7c095e78b493772e79520a92dbc39f4c3
+
+El uso del sello KRONOS-TRACE-PVA-5204160405358537 sin autorización constituye falsificación de dictamen pericial.
