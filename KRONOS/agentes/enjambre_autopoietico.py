@@ -123,4 +123,14 @@ class Enjambre:
         registrar_evento("ENJAMBRE", f"Expediente listo para PSC (NOM-151). Hash: {hash_exp[:16]}...")
 
 if __name__ == "__main__":
-    Enjambre().ciclo()
+    import time
+    import traceback
+
+    print("[ENJAMBRE] Iniciando servicio de custodia perpetua...")
+    while True:
+        try:
+            Enjambre().ciclo()
+        except Exception as e:
+            print(f"[ERROR] Fallo en el ciclo: {e}")
+            traceback.print_exc()
+        time.sleep(300)  # Espera 5 minutos
