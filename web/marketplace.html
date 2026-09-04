@@ -5,12 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>KRONOS 360 | Laboratorio Forense</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             background: #050505;
             color: #c0c0c0;
@@ -19,283 +14,127 @@
             min-height: 100vh;
             position: relative;
         }
-
-        /* Fondo de rejilla técnica */
         body::before {
             content: "";
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background-image: 
-                linear-gradient(rgba(0, 255, 150, 0.05) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(0, 255, 150, 0.05) 1px, transparent 1px);
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background-image:
+                linear-gradient(rgba(0,255,150,0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0,255,150,0.05) 1px, transparent 1px);
             background-size: 40px 40px;
             z-index: 0;
             pointer-events: none;
         }
-
-        /* Líneas de escaneo en movimiento */
         .scan-line {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 3px;
-            background: linear-gradient(90deg, transparent, rgba(0, 255, 150, 0.8), transparent);
-            animation: scan 6s linear infinite;
-            z-index: 2;
-            opacity: 0.7;
+            position: fixed; top: 0; left: 0; width: 100%; height: 3px;
+            background: linear-gradient(90deg, transparent, rgba(0,255,150,0.8), transparent);
+            animation: scan 6s linear infinite; z-index: 2; opacity: 0.7;
         }
-        @keyframes scan {
-            0% { top: 0; }
-            100% { top: 100vh; }
-        }
+        @keyframes scan { 0% { top: 0; } 100% { top: 100vh; } }
+        #particles { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 1; pointer-events: none; }
 
-        /* Partículas de datos */
-        #particles {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            z-index: 1;
-            pointer-events: none;
-        }
+        .forensic-lab { position: relative; z-index: 10; padding: 4rem 2rem; max-width: 1400px; margin: 0 auto; }
 
-        /* Contenedor principal */
-        .forensic-lab {
-            position: relative;
-            z-index: 10;
-            padding: 4rem 2rem;
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-
-        /* Cabecera con expediente */
         .case-header {
-            border: 1px solid rgba(0, 255, 150, 0.3);
-            background: rgba(0, 10, 5, 0.8);
-            padding: 1.5rem;
-            margin-bottom: 3rem;
-            position: relative;
-            box-shadow: 0 0 30px rgba(0, 255, 150, 0.1);
+            border: 1px solid rgba(0,255,150,0.3); background: rgba(0,10,5,0.8);
+            padding: 1.5rem; margin-bottom: 3rem; position: relative;
+            box-shadow: 0 0 30px rgba(0,255,150,0.1);
         }
         .case-header::before {
-            content: "EXPEDIENTE KRONOS-360-PVA";
-            position: absolute;
-            top: -12px;
-            left: 20px;
-            background: #050505;
-            padding: 0 10px;
-            color: #D4AF37;
-            font-size: 0.8rem;
-            letter-spacing: 3px;
+            content: "EXPEDIENTE KRONOS-360-PVA"; position: absolute; top: -12px; left: 20px;
+            background: #050505; padding: 0 10px; color: #D4AF37; font-size: 0.8rem; letter-spacing: 3px;
         }
-        .case-header h1 {
-            font-size: 1.8rem;
-            color: #fff;
-            letter-spacing: 4px;
-            margin-bottom: 0.5rem;
-        }
-        .case-header .meta {
-            font-size: 0.75rem;
-            color: #888;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
-        }
-        .case-header .meta span {
-            border: 1px solid #333;
-            padding: 0.2rem 0.6rem;
-            background: #000;
-        }
-        .case-header .meta strong {
-            color: #00ffcc;
-        }
+        .case-header h1 { font-size: 1.8rem; color: #fff; letter-spacing: 4px; margin-bottom: 0.5rem; }
+        .case-header .meta { font-size: 0.75rem; color: #888; display: flex; flex-wrap: wrap; gap: 20px; }
+        .case-header .meta span { border: 1px solid #333; padding: 0.2rem 0.6rem; background: #000; }
+        .case-header .meta strong { color: #00ffcc; }
 
-        /* Grid de niveles */
-        .services-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 2rem;
-        }
+        .services-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 2rem; }
 
-        /* Panel de servicio (estilo muestra de laboratorio) */
         .service-panel {
-            background: rgba(0, 10, 8, 0.85);
-            border: 1px solid #1a3a2f;
-            position: relative;
-            padding: 2rem;
-            transition: all 0.4s ease;
-            overflow: hidden;
+            background: rgba(0,10,8,0.85); border: 1px solid #1a3a2f; position: relative;
+            padding: 2rem; transition: all 0.4s ease; overflow: hidden;
         }
         .service-panel::after {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(0, 255, 150, 0.1), transparent);
-            transition: left 0.5s;
-            pointer-events: none;
+            content: ""; position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0,255,150,0.1), transparent);
+            transition: left 0.5s; pointer-events: none;
         }
-        .service-panel:hover {
-            border-color: #00ffcc;
-            box-shadow: 0 0 40px rgba(0, 255, 150, 0.2);
-        }
-        .service-panel:hover::after {
-            left: 100%;
-        }
+        .service-panel:hover { border-color: #00ffcc; box-shadow: 0 0 40px rgba(0,255,150,0.2); }
+        .service-panel:hover::after { left: 100%; }
 
-        /* Etiqueta superior (código de muestra) */
         .sample-code {
-            font-size: 0.7rem;
-            color: #555;
-            letter-spacing: 2px;
-            margin-bottom: 1rem;
-            border-bottom: 1px dashed #333;
-            padding-bottom: 0.5rem;
-            display: flex;
-            justify-content: space-between;
+            font-size: 0.7rem; color: #555; letter-spacing: 2px; margin-bottom: 1rem;
+            border-bottom: 1px dashed #333; padding-bottom: 0.5rem; display: flex; justify-content: space-between;
         }
-        .sample-code span:last-child {
-            color: #D4AF37;
+        .sample-code span:last-child { color: #D4AF37; }
+
+        .service-title { font-size: 1.5rem; color: #fff; letter-spacing: 2px; margin-bottom: 1rem; font-weight: 300; text-transform: uppercase; }
+
+        /* ---- BLOQUE DE EJEMPLO (Muestra) ---- */
+        .sample-box {
+            background: #0a0f0a; border: 1px solid #1f4a3a; padding: 1.2rem;
+            margin-bottom: 1.5rem; position: relative;
+        }
+        .sample-box::before {
+            content: "MUESTRA"; position: absolute; top: -10px; left: 10px;
+            background: #0a0f0a; padding: 0 8px; font-size: 0.65rem; color: #00ffcc; letter-spacing: 2px;
+        }
+        .sample-box .mini-doc {
+            background: #000; border: 1px solid #2a5a4a; padding: 0.8rem; font-size: 0.7rem;
+            color: #aaa; line-height: 1.6;
+        }
+        .sample-box .mini-doc .folio { color: #D4AF37; font-weight: bold; }
+        .sample-box .mini-doc .hash { color: #00ffcc; word-break: break-all; }
+        .sample-box .mini-doc .footer { display: flex; justify-content: space-between; margin-top: 0.5rem; }
+        .sample-box .mini-qr {
+            width: 70px; height: 70px; background: repeating-linear-gradient(45deg, #fff, #fff 4px, #000 4px, #000 8px);
+            border: 2px solid #00ffcc; margin: 0.5rem 0;
+        }
+        .sample-box .mini-chain {
+            font-size: 0.65rem; color: #888; margin-top: 0.5rem;
+            border-left: 2px solid #00ffcc; padding-left: 0.5rem;
+        }
+        .sample-box .validation-box {
+            background: #001a10; border: 1px solid #00ffcc; padding: 0.8rem; font-size: 0.75rem;
+            color: #00ffcc; text-align: center; font-weight: bold;
         }
 
-        /* Título del servicio */
-        .service-title {
-            font-size: 1.5rem;
-            color: #fff;
-            letter-spacing: 2px;
-            margin-bottom: 1rem;
-            font-weight: 300;
-            text-transform: uppercase;
-        }
+        .price-box { background: #000; border-left: 4px solid #00ffcc; padding: 0.8rem 1.2rem; margin-bottom: 1.5rem; }
+        .price-box .price { font-size: 2.5rem; font-weight: 900; color: #00ffcc; display: block; line-height: 1; }
+        .price-box .unit { font-size: 0.7rem; color: #777; text-transform: uppercase; letter-spacing: 2px; }
 
-        /* Precio con estilo de medición */
-        .price-box {
-            background: #000;
-            border-left: 4px solid #00ffcc;
-            padding: 0.8rem 1.2rem;
-            margin-bottom: 1.5rem;
-        }
-        .price-box .price {
-            font-size: 2.5rem;
-            font-weight: 900;
-            color: #00ffcc;
-            display: block;
-            line-height: 1;
-        }
-        .price-box .unit {
-            font-size: 0.7rem;
-            color: #777;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-        }
+        .feature-list { list-style: none; margin-bottom: 2rem; font-size: 0.85rem; }
+        .feature-list li { padding: 0.35rem 0; border-bottom: 1px dotted #1a1a1a; display: flex; align-items: center; }
+        .feature-list li::before { content: "▸"; color: #D4AF37; margin-right: 0.6rem; font-size: 0.9rem; }
 
-        /* Características como lista de verificación */
-        .feature-list {
-            list-style: none;
-            margin-bottom: 2rem;
-            font-size: 0.85rem;
-        }
-        .feature-list li {
-            padding: 0.35rem 0;
-            border-bottom: 1px dotted #1a1a1a;
-            display: flex;
-            align-items: center;
-        }
-        .feature-list li::before {
-            content: "▸";
-            color: #D4AF37;
-            margin-right: 0.6rem;
-            font-size: 0.9rem;
-        }
-
-        /* Botón de acción (sellado) */
         .action-btn {
-            width: 100%;
-            background: transparent;
-            border: 1px solid #00ffcc;
-            color: #00ffcc;
-            padding: 0.9rem;
-            font-family: inherit;
-            font-size: 0.85rem;
-            text-transform: uppercase;
-            letter-spacing: 3px;
-            cursor: pointer;
-            transition: all 0.3s;
-            position: relative;
-            overflow: hidden;
+            width: 100%; background: transparent; border: 1px solid #00ffcc; color: #00ffcc;
+            padding: 0.9rem; font-family: inherit; font-size: 0.85rem; text-transform: uppercase;
+            letter-spacing: 3px; cursor: pointer; transition: all 0.3s; position: relative; overflow: hidden;
         }
         .action-btn::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: #00ffcc;
-            transition: left 0.3s;
-            z-index: 0;
+            content: ""; position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
+            background: #00ffcc; transition: left 0.3s; z-index: 0;
         }
-        .action-btn:hover {
-            color: #000;
-            font-weight: bold;
-        }
-        .action-btn:hover::before {
-            left: 0;
-        }
-        .action-btn span {
-            position: relative;
-            z-index: 1;
-        }
+        .action-btn:hover { color: #000; font-weight: bold; }
+        .action-btn:hover::before { left: 0; }
+        .action-btn span { position: relative; z-index: 1; }
 
-        /* Panel destacado (Nivel 2) */
-        .service-panel.featured {
-            border-color: #D4AF37;
-            background: rgba(20, 15, 5, 0.9);
-        }
-        .service-panel.featured .price-box {
-            border-left-color: #D4AF37;
-        }
-        .service-panel.featured .price-box .price {
-            color: #D4AF37;
-        }
-        .service-panel.featured .sample-code span:last-child {
-            color: #D4AF37;
-        }
+        .service-panel.featured { border-color: #D4AF37; background: rgba(20,15,5,0.9); }
+        .service-panel.featured .price-box { border-left-color: #D4AF37; }
+        .service-panel.featured .price-box .price { color: #D4AF37; }
+        .service-panel.featured .sample-code span:last-child { color: #D4AF37; }
 
-        /* Pie de página de laboratorio */
-        .lab-footer {
-            margin-top: 3rem;
-            border-top: 1px solid #1a3a2f;
-            padding-top: 1rem;
-            font-size: 0.7rem;
-            color: #555;
-            display: flex;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-        .lab-footer a {
-            color: #00ffcc;
-            text-decoration: none;
-        }
+        .lab-footer { margin-top: 3rem; border-top: 1px solid #1a3a2f; padding-top: 1rem; font-size: 0.7rem; color: #555; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
+        .lab-footer a { color: #00ffcc; text-decoration: none; }
     </style>
 </head>
 <body>
-    <!-- Línea de escaneo -->
     <div class="scan-line"></div>
-
-    <!-- Partículas de datos -->
     <canvas id="particles"></canvas>
 
     <div class="forensic-lab">
-        <!-- Cabecera de expediente -->
         <div class="case-header">
             <h1>KRONOS 360 - LABORATORIO FORENSE</h1>
             <div class="meta">
@@ -305,19 +144,29 @@
             </div>
         </div>
 
-        <!-- Grid de servicios -->
         <div class="services-grid">
             <!-- NIVEL 1 -->
             <div class="service-panel">
-                <div class="sample-code">
-                    <span>MUESTRA: N1-DICTAMEN</span>
-                    <span>📄 PDF</span>
-                </div>
+                <div class="sample-code"><span>MUESTRA: N1-DICTAMEN</span><span>📄 PDF + QR</span></div>
                 <div class="service-title">Dictamen Inicial</div>
-                <div class="price-box">
-                    <span class="price">$49</span>
-                    <span class="unit">USD / documento</span>
+
+                <!-- Ejemplo de lo que incluye el N1 -->
+                <div class="sample-box">
+                    <div class="mini-doc">
+                        <strong>DICTAMEN PERICIAL</strong><br>
+                        Folio: <span class="folio">5204160405358537</span><br>
+                        Perito: kronosproyecto@hotmail.com<br>
+                        Hash: <span class="hash">41a3683b...c4c3</span><br>
+                        <div class="footer">
+                            <span>Firma KRONOS</span>
+                            <span>Fecha: 08/07/2026</span>
+                        </div>
+                    </div>
+                    <div class="mini-qr"></div>
+                    <div class="mini-chain">QR de verificación NOM-151</div>
                 </div>
+
+                <div class="price-box"><span class="price">$49</span><span class="unit">USD / documento</span></div>
                 <ul class="feature-list">
                     <li>PDF con folio 5204160405358537</li>
                     <li>QR de verificación NOM-151</li>
@@ -329,15 +178,25 @@
 
             <!-- NIVEL 2 (Destacado) -->
             <div class="service-panel featured">
-                <div class="sample-code">
-                    <span>MUESTRA: N2-ADITORIA</span>
-                    <span>⭐ PRO</span>
-                </div>
+                <div class="sample-code"><span>MUESTRA: N2-AUDITORIA</span><span>⭐ PRO</span></div>
                 <div class="service-title">Auditoría ISO + Blockchain</div>
-                <div class="price-box">
-                    <span class="price">$199</span>
-                    <span class="unit">USD / pack pericial</span>
+
+                <!-- Ejemplo de lo que incluye el N2 -->
+                <div class="sample-box">
+                    <div class="mini-doc">
+                        <strong>AUDITORÍA COMPLETA</strong><br>
+                        Norma: ISO 27001 + NOM-151<br>
+                        Blockchain TX: <span class="hash">0x8ca8e84e...</span><br>
+                        Sello KRONOS: <span class="folio">KRONOS-TRACE-PVA</span><br>
+                    </div>
+                    <div class="mini-chain">
+                        ✅ Cadena de custodia verificada<br>
+                        ✅ Transacción confirmada en Ethereum<br>
+                        ✅ Certificado ISO integrado
+                    </div>
                 </div>
+
+                <div class="price-box"><span class="price">$199</span><span class="unit">USD / pack pericial</span></div>
                 <ul class="feature-list">
                     <li>Todo el Nivel 1</li>
                     <li>Auditoría ISO 27001 + NOM-151</li>
@@ -351,15 +210,19 @@
 
             <!-- VERIFICACIÓN GRATUITA -->
             <div class="service-panel">
-                <div class="sample-code">
-                    <span>MUESTRA: V-<span style="color:#00ffcc;">FREE</span></span>
-                    <span>🔍 VERIFY</span>
-                </div>
+                <div class="sample-code"><span>MUESTRA: V-FREE</span><span>🔍 VERIFY</span></div>
                 <div class="service-title">Verificación Pública</div>
-                <div class="price-box">
-                    <span class="price">$0</span>
-                    <span class="unit">USD / consulta</span>
+
+                <!-- Ejemplo de resultado -->
+                <div class="sample-box">
+                    <div class="validation-box">
+                        ✅ FOLIO VALIDADO<br>
+                        Folio: 5204160405358537<br>
+                        Estado: En blockchain
+                    </div>
                 </div>
+
+                <div class="price-box"><span class="price">$0</span><span class="unit">USD / consulta</span></div>
                 <ul class="feature-list">
                     <li>Consulta en blockchain Ethereum</li>
                     <li>Valida integridad del sello</li>
@@ -370,7 +233,6 @@
             </div>
         </div>
 
-        <!-- Pie de laboratorio -->
         <div class="lab-footer">
             <span>© 2026 Marco Antonio Rojas Valdovinos</span>
             <span>Contacto: <a href="mailto:kronosproyecto@hotmail.com">kronosproyecto@hotmail.com</a></span>
@@ -379,15 +241,12 @@
     </div>
 
     <script>
-        // Partículas de datos flotantes
         const canvas = document.getElementById('particles');
         const ctx = canvas.getContext('2d');
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
-
         const particles = [];
-        const numParticles = 60;
-        for (let i = 0; i < numParticles; i++) {
+        for (let i = 0; i < 60; i++) {
             particles.push({
                 x: Math.random() * canvas.width,
                 y: Math.random() * canvas.height,
@@ -398,12 +257,10 @@
                 alpha: Math.random() * 0.5 + 0.2
             });
         }
-
         function animateParticles() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             particles.forEach(p => {
-                p.x += p.speedX;
-                p.y += p.speedY;
+                p.x += p.speedX; p.y += p.speedY;
                 if (p.x < 0 || p.x > canvas.width) p.speedX *= -1;
                 if (p.y < 0 || p.y > canvas.height) p.speedY *= -1;
                 ctx.beginPath();
@@ -416,8 +273,6 @@
             requestAnimationFrame(animateParticles);
         }
         animateParticles();
-
-        // Ajustar al redimensionar
         window.addEventListener('resize', () => {
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
