@@ -1,0 +1,32 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pva-protocolo-vida-autopoietica"
+version = "1.0.0"
+description = "Protocolo de Vida Autopoietica - Oráculo 51/49 con sellado pericial KRONOS"
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "MIT" }
+authors = [
+  { name = "Marco Antonio Rojas Valdovinos", email = "kronosproyecto@hotmail.com" }
+]
+dependencies = [
+    "reportlab",
+    "qrcode[pil]",
+    "requests",
+    "web3",
+    "ipfshttpclient",
+    "pytest",
+    "flake8",
+    "mypy"
+]
+
+[project.scripts]
+pva-generate = "scripts.generate_manifesto:main"
+pva-pdf = "scripts.generate_pdf_dictamen:main"
+pva-deploy = "scripts.deploy_contract:main"
+
+[tool.setuptools.packages.find]
+include = ["core*", "scripts*", "contracts*"]
