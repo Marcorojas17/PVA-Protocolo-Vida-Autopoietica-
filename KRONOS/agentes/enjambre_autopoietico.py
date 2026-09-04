@@ -74,11 +74,11 @@ class AgenteEscriba:
         return sello
 
 class AgenteVigilante:
-    def detectar_plagio(self, hash_candidato):
-        if hash_candidato == GENESIS or hash_candidato == SHA_OFICIAL:
+    def detectar_plagio(self, manifiesto_generado):
+        if FOLIO in manifiesto_generado or manifiesto_generado == GENESIS:
             return "OBRA ORIGINAL CERTIFICADA"
         else:
-            ESTADO_COLECTIVO["alertas"].append(f"Posible copia: {hash_candidato[:8]}...")
+            ESTADO_COLECTIVO["alertas"].append(f"Posible copia: {manifiesto_generado[:8]}...")
             registrar_evento("VIGILANTE", "ALERTA: POSIBLE COPIA")
             return "ALERTA: POSIBLE COPIA"
 
@@ -133,4 +133,4 @@ if __name__ == "__main__":
         except Exception as e:
             print(f"[ERROR] Fallo en el ciclo: {e}")
             traceback.print_exc()
-        time.sleep(300)  # Espera 5 minutos
+        time.sleep(300)
