@@ -3,306 +3,403 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KRONOS 360 | NeuroMarket</title>
+    <title>KRONOS 360 | Laboratorio Forense</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
+
         body {
-            background: #000000;
-            color: #ffffff;
-            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: #050505;
+            color: #c0c0c0;
+            font-family: 'Courier New', Courier, monospace;
             overflow-x: hidden;
             min-height: 100vh;
-            cursor: crosshair;
+            position: relative;
         }
 
-        /* Fondo con partículas de ADN */
-        #dnaCanvas {
+        /* Fondo de rejilla técnica */
+        body::before {
+            content: "";
             position: fixed;
             top: 0;
             left: 0;
             width: 100vw;
             height: 100vh;
+            background-image: 
+                linear-gradient(rgba(0, 255, 150, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 255, 150, 0.05) 1px, transparent 1px);
+            background-size: 40px 40px;
             z-index: 0;
-        }
-
-        /* Anillo de energía central */
-        .kronos-ring {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 300px;
-            height: 300px;
-            border-radius: 50%;
-            border: 2px solid rgba(0, 255, 150, 0.2);
-            box-shadow: 0 0 40px rgba(0, 255, 150, 0.15);
-            z-index: 1;
-            animation: spin 20s linear infinite;
             pointer-events: none;
         }
-        .kronos-ring::before {
-            content: "KRONOS 360";
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%) rotate(-20deg);
-            color: #D4AF37;
-            font-size: 1.5rem;
-            letter-spacing: 8px;
-            text-shadow: 0 0 20px #D4AF37;
-            font-weight: 900;
+
+        /* Líneas de escaneo en movimiento */
+        .scan-line {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, rgba(0, 255, 150, 0.8), transparent);
+            animation: scan 6s linear infinite;
+            z-index: 2;
+            opacity: 0.7;
         }
-        .kronos-ring::after {
-            content: "";
-            position: absolute;
-            top: -10px;
-            left: 50%;
-            width: 20px;
-            height: 20px;
-            background: #00ffcc;
-            border-radius: 50%;
-            box-shadow: 0 0 15px #00ffcc;
+        @keyframes scan {
+            0% { top: 0; }
+            100% { top: 100vh; }
         }
-        @keyframes spin {
-            from { transform: translate(-50%, -50%) rotate(0deg); }
-            to { transform: translate(-50%, -50%) rotate(360deg); }
+
+        /* Partículas de datos */
+        #particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 1;
+            pointer-events: none;
         }
 
         /* Contenedor principal */
-        .marketplace {
+        .forensic-lab {
             position: relative;
             z-index: 10;
+            padding: 4rem 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* Cabecera con expediente */
+        .case-header {
+            border: 1px solid rgba(0, 255, 150, 0.3);
+            background: rgba(0, 10, 5, 0.8);
+            padding: 1.5rem;
+            margin-bottom: 3rem;
+            position: relative;
+            box-shadow: 0 0 30px rgba(0, 255, 150, 0.1);
+        }
+        .case-header::before {
+            content: "EXPEDIENTE KRONOS-360-PVA";
+            position: absolute;
+            top: -12px;
+            left: 20px;
+            background: #050505;
+            padding: 0 10px;
+            color: #D4AF37;
+            font-size: 0.8rem;
+            letter-spacing: 3px;
+        }
+        .case-header h1 {
+            font-size: 1.8rem;
+            color: #fff;
+            letter-spacing: 4px;
+            margin-bottom: 0.5rem;
+        }
+        .case-header .meta {
+            font-size: 0.75rem;
+            color: #888;
             display: flex;
             flex-wrap: wrap;
-            justify-content: center;
-            align-items: center;
-            gap: 2rem;
-            padding: 6rem 2rem;
-            min-height: 100vh;
+            gap: 20px;
+        }
+        .case-header .meta span {
+            border: 1px solid #333;
+            padding: 0.2rem 0.6rem;
+            background: #000;
+        }
+        .case-header .meta strong {
+            color: #00ffcc;
         }
 
-        /* Cápsulas de energía (Niveles) */
-        .capsule {
-            width: 280px;
-            height: 380px;
-            background: rgba(10, 20, 15, 0.7);
-            border: 1px solid rgba(0, 255, 150, 0.3);
-            border-radius: 40px;
-            backdrop-filter: blur(10px);
+        /* Grid de niveles */
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        /* Panel de servicio (estilo muestra de laboratorio) */
+        .service-panel {
+            background: rgba(0, 10, 8, 0.85);
+            border: 1px solid #1a3a2f;
             position: relative;
+            padding: 2rem;
+            transition: all 0.4s ease;
             overflow: hidden;
-            transition: transform 0.3s ease, border-color 0.3s, box-shadow 0.3s;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
         }
-        .capsule:hover {
-            transform: translateY(-15px);
-            border-color: #00ffcc;
-            box-shadow: 0 20px 60px rgba(0, 255, 150, 0.3);
-        }
-        .capsule::before {
+        .service-panel::after {
             content: "";
             position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(0, 255, 150, 0.2) 0%, transparent 60%);
-            opacity: 0;
-            transition: opacity 0.3s;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 255, 150, 0.1), transparent);
+            transition: left 0.5s;
             pointer-events: none;
         }
-        .capsule:hover::before {
-            opacity: 1;
+        .service-panel:hover {
+            border-color: #00ffcc;
+            box-shadow: 0 0 40px rgba(0, 255, 150, 0.2);
+        }
+        .service-panel:hover::after {
+            left: 100%;
         }
 
-        /* Etiqueta de nivel */
-        .level-label {
-            font-size: 0.8rem;
-            letter-spacing: 4px;
-            text-transform: uppercase;
-            color: #D4AF37;
-            border: 1px solid #D4AF37;
-            padding: 0.3rem 1rem;
-            border-radius: 30px;
-            margin-bottom: 1.5rem;
-            background: rgba(0, 0, 0, 0.5);
-        }
-
-        /* Nombre del servicio */
-        .service-name {
-            font-size: 1.8rem;
-            font-weight: 300;
-            text-align: center;
-            margin-bottom: 1rem;
+        /* Etiqueta superior (código de muestra) */
+        .sample-code {
+            font-size: 0.7rem;
+            color: #555;
             letter-spacing: 2px;
-            color: #fff;
+            margin-bottom: 1rem;
+            border-bottom: 1px dashed #333;
+            padding-bottom: 0.5rem;
+            display: flex;
+            justify-content: space-between;
+        }
+        .sample-code span:last-child {
+            color: #D4AF37;
         }
 
-        /* Precio en UVP */
-        .price {
-            font-size: 3.5rem;
+        /* Título del servicio */
+        .service-title {
+            font-size: 1.5rem;
+            color: #fff;
+            letter-spacing: 2px;
+            margin-bottom: 1rem;
+            font-weight: 300;
+            text-transform: uppercase;
+        }
+
+        /* Precio con estilo de medición */
+        .price-box {
+            background: #000;
+            border-left: 4px solid #00ffcc;
+            padding: 0.8rem 1.2rem;
+            margin-bottom: 1.5rem;
+        }
+        .price-box .price {
+            font-size: 2.5rem;
             font-weight: 900;
             color: #00ffcc;
-            text-shadow: 0 0 30px rgba(0, 255, 150, 0.5);
-            margin-bottom: 1.5rem;
-        }
-        .price span {
-            font-size: 1rem;
-            font-weight: 300;
-            color: #aaa;
             display: block;
-            letter-spacing: 2px;
+            line-height: 1;
         }
-
-        /* Lista de características */
-        .features {
-            list-style: none;
-            text-align: left;
-            font-size: 0.8rem;
-            color: #bbb;
-            line-height: 2;
-            margin-bottom: 2rem;
-            padding: 0 1rem;
-        }
-        .features li::before {
-            content: "◆";
-            color: #00ffcc;
-            margin-right: 0.5rem;
-        }
-
-        /* Botón de compra holográfico */
-        .buy-btn {
-            background: linear-gradient(135deg, #00ffcc, #D4AF37);
-            color: #000;
-            border: none;
-            padding: 12px 40px;
-            border-radius: 50px;
-            font-weight: 800;
-            letter-spacing: 2px;
-            cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
-            opacity: 0.9;
-        }
-        .capsule:hover .buy-btn {
-            transform: scale(1.05);
-            box-shadow: 0 10px 30px rgba(0, 255, 150, 0.4);
-        }
-
-        /* Nivel 2: más destacado */
-        .capsule.featured {
-            border-color: #D4AF37;
-            background: linear-gradient(180deg, rgba(20, 30, 20, 0.9), rgba(0, 0, 0, 0.9));
-        }
-        .capsule.featured .price {
-            color: #D4AF37;
-            text-shadow: 0 0 30px rgba(212, 175, 55, 0.5);
-        }
-        .capsule.featured .level-label {
-            background: #D4AF37;
-            color: #000;
-        }
-
-        /* Footer */
-        .footer-info {
-            position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            text-align: center;
+        .price-box .unit {
             font-size: 0.7rem;
-            color: #666;
-            z-index: 10;
-            pointer-events: none;
+            color: #777;
+            text-transform: uppercase;
+            letter-spacing: 2px;
         }
-        .footer-info a {
+
+        /* Características como lista de verificación */
+        .feature-list {
+            list-style: none;
+            margin-bottom: 2rem;
+            font-size: 0.85rem;
+        }
+        .feature-list li {
+            padding: 0.35rem 0;
+            border-bottom: 1px dotted #1a1a1a;
+            display: flex;
+            align-items: center;
+        }
+        .feature-list li::before {
+            content: "▸";
+            color: #D4AF37;
+            margin-right: 0.6rem;
+            font-size: 0.9rem;
+        }
+
+        /* Botón de acción (sellado) */
+        .action-btn {
+            width: 100%;
+            background: transparent;
+            border: 1px solid #00ffcc;
+            color: #00ffcc;
+            padding: 0.9rem;
+            font-family: inherit;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        .action-btn::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: #00ffcc;
+            transition: left 0.3s;
+            z-index: 0;
+        }
+        .action-btn:hover {
+            color: #000;
+            font-weight: bold;
+        }
+        .action-btn:hover::before {
+            left: 0;
+        }
+        .action-btn span {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Panel destacado (Nivel 2) */
+        .service-panel.featured {
+            border-color: #D4AF37;
+            background: rgba(20, 15, 5, 0.9);
+        }
+        .service-panel.featured .price-box {
+            border-left-color: #D4AF37;
+        }
+        .service-panel.featured .price-box .price {
+            color: #D4AF37;
+        }
+        .service-panel.featured .sample-code span:last-child {
+            color: #D4AF37;
+        }
+
+        /* Pie de página de laboratorio */
+        .lab-footer {
+            margin-top: 3rem;
+            border-top: 1px solid #1a3a2f;
+            padding-top: 1rem;
+            font-size: 0.7rem;
+            color: #555;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .lab-footer a {
             color: #00ffcc;
             text-decoration: none;
         }
     </style>
 </head>
 <body>
-    <canvas id="dnaCanvas"></canvas>
-    <div class="kronos-ring"></div>
+    <!-- Línea de escaneo -->
+    <div class="scan-line"></div>
 
-    <div class="marketplace">
-        <!-- NIVEL 1 -->
-        <div class="capsule" onclick="alert('Nivel 1 seleccionado. Contacta a kronosproyecto@hotmail.com para proceder.')">
-            <div class="level-label">Nivel 1 · Inicial</div>
-            <div class="service-name">Dictamen<br>PDF + QR</div>
-            <div class="price">$49<span>USD / dictamen</span></div>
-            <ul class="features">
-                <li>PDF con folio 5204160405358537</li>
-                <li>QR verificación NOM-151</li>
-                <li>Sello KRONOS-TRACE-PVA</li>
-                <li>Validez MP / Fiscal / Civil</li>
-                <li>Entrega inmediata</li>
-            </ul>
-            <button class="buy-btn">COMPRAR NIVEL 1</button>
+    <!-- Partículas de datos -->
+    <canvas id="particles"></canvas>
+
+    <div class="forensic-lab">
+        <!-- Cabecera de expediente -->
+        <div class="case-header">
+            <h1>KRONOS 360 - LABORATORIO FORENSE</h1>
+            <div class="meta">
+                <span>FOLIO: <strong>5204160405358537</strong></span>
+                <span>PERITO: <strong>kronosproyecto@hotmail.com</strong></span>
+                <span>SAFE CREATIVE: <strong>2607146379465</strong></span>
+            </div>
         </div>
 
-        <!-- NIVEL 2 (Destacado) -->
-        <div class="capsule featured">
-            <div class="level-label">Nivel 2 · Pro</div>
-            <div class="service-name">Dictamen<br>+ Auditoría ISO</div>
-            <div class="price">$199<span>USD / pack pericial</span></div>
-            <ul class="features">
-                <li>Todo el Nivel 1</li>
-                <li>Auditoría ISO 27001 + NOM-151</li>
-                <li>Verificación blockchain TX 0x8ca...</li>
-                <li>Sello KRONOS + cadena de custodia</li>
-                <li>SafeCreative + API + Etherscan</li>
-                <li>Defensa ante SAT / Tribunal</li>
-            </ul>
-            <button class="buy-btn">COMPRAR NIVEL 2</button>
+        <!-- Grid de servicios -->
+        <div class="services-grid">
+            <!-- NIVEL 1 -->
+            <div class="service-panel">
+                <div class="sample-code">
+                    <span>MUESTRA: N1-DICTAMEN</span>
+                    <span>📄 PDF</span>
+                </div>
+                <div class="service-title">Dictamen Inicial</div>
+                <div class="price-box">
+                    <span class="price">$49</span>
+                    <span class="unit">USD / documento</span>
+                </div>
+                <ul class="feature-list">
+                    <li>PDF con folio 5204160405358537</li>
+                    <li>QR de verificación NOM-151</li>
+                    <li>Sello KRONOS-TRACE-PVA</li>
+                    <li>Validez MP / Fiscal / Civil</li>
+                </ul>
+                <button class="action-btn" onclick="alert('Solicitud de nivel 1. Contacta al perito.')"><span>COMPRAR NIVEL 1</span></button>
+            </div>
+
+            <!-- NIVEL 2 (Destacado) -->
+            <div class="service-panel featured">
+                <div class="sample-code">
+                    <span>MUESTRA: N2-ADITORIA</span>
+                    <span>⭐ PRO</span>
+                </div>
+                <div class="service-title">Auditoría ISO + Blockchain</div>
+                <div class="price-box">
+                    <span class="price">$199</span>
+                    <span class="unit">USD / pack pericial</span>
+                </div>
+                <ul class="feature-list">
+                    <li>Todo el Nivel 1</li>
+                    <li>Auditoría ISO 27001 + NOM-151</li>
+                    <li>Verificación blockchain (TX 0x8ca8e84e...)</li>
+                    <li>Sello KRONOS + cadena de custodia</li>
+                    <li>SafeCreative + API + Etherscan</li>
+                    <li>Defensa ante SAT / Tribunal</li>
+                </ul>
+                <button class="action-btn" onclick="alert('Solicitud de nivel 2. Contacta al perito.')"><span>COMPRAR NIVEL 2</span></button>
+            </div>
+
+            <!-- VERIFICACIÓN GRATUITA -->
+            <div class="service-panel">
+                <div class="sample-code">
+                    <span>MUESTRA: V-<span style="color:#00ffcc;">FREE</span></span>
+                    <span>🔍 VERIFY</span>
+                </div>
+                <div class="service-title">Verificación Pública</div>
+                <div class="price-box">
+                    <span class="price">$0</span>
+                    <span class="unit">USD / consulta</span>
+                </div>
+                <ul class="feature-list">
+                    <li>Consulta en blockchain Ethereum</li>
+                    <li>Valida integridad del sello</li>
+                    <li>Comprueba autoría en SafeCreative</li>
+                    <li>Instantáneo</li>
+                </ul>
+                <button class="action-btn" onclick="alert('Función de verificación pública disponible próximamente.')"><span>VERIFICAR EN BLOCKCHAIN</span></button>
+            </div>
         </div>
 
-        <!-- VERIFICACIÓN GRATUITA -->
-        <div class="capsule" onclick="alert('Introduce tu folio para verificar en blockchain.')">
-            <div class="level-label">Verificación</div>
-            <div class="service-name">Verifica<br>Tu Folio</div>
-            <div class="price">$0<span>GRATIS</span></div>
-            <ul class="features">
-                <li>Consulta en blockchain Ethereum</li>
-                <li>Valida integridad del sello</li>
-                <li>Comprueba autoría en SafeCreative</li>
-                <li>Instantáneo</li>
-            </ul>
-            <button class="buy-btn">VERIFICAR EN BLOCKCHAIN</button>
+        <!-- Pie de laboratorio -->
+        <div class="lab-footer">
+            <span>© 2026 Marco Antonio Rojas Valdovinos</span>
+            <span>Contacto: <a href="mailto:kronosproyecto@hotmail.com">kronosproyecto@hotmail.com</a></span>
+            <span>Verificación: <a href="https://marcorojas17.github.io/PVA-Protocolo-Vida-Autopoietica-/web/" target="_blank">Oráculo KRONOS</a></span>
         </div>
-    </div>
-
-    <div class="footer-info">
-        Autor: Marco Antonio Rojas Valdovinos · Perito: <a href="mailto:kronosproyecto@hotmail.com">kronosproyecto@hotmail.com</a> · Folio: 5204160405358537
     </div>
 
     <script>
-        // Partículas de ADN flotando
-        const canvas = document.getElementById('dnaCanvas');
+        // Partículas de datos flotantes
+        const canvas = document.getElementById('particles');
         const ctx = canvas.getContext('2d');
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
 
         const particles = [];
-        for (let i = 0; i < 80; i++) {
+        const numParticles = 60;
+        for (let i = 0; i < numParticles; i++) {
             particles.push({
                 x: Math.random() * canvas.width,
                 y: Math.random() * canvas.height,
-                r: Math.random() * 2 + 0.5,
-                speedX: (Math.random() - 0.5) * 0.5,
-                speedY: (Math.random() - 0.5) * 0.5,
-                color: Math.random() > 0.5 ? '#00ffcc' : '#D4AF37'
+                r: Math.random() * 1.5 + 0.5,
+                speedX: (Math.random() - 0.5) * 0.3,
+                speedY: (Math.random() - 0.5) * 0.3,
+                color: Math.random() > 0.6 ? '#D4AF37' : '#00ffcc',
+                alpha: Math.random() * 0.5 + 0.2
             });
         }
 
-        function animate() {
+        function animateParticles() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             particles.forEach(p => {
                 p.x += p.speedX;
@@ -312,15 +409,15 @@
                 ctx.beginPath();
                 ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
                 ctx.fillStyle = p.color;
-                ctx.shadowBlur = 10;
-                ctx.shadowColor = p.color;
+                ctx.globalAlpha = p.alpha;
                 ctx.fill();
             });
-            requestAnimationFrame(animate);
+            ctx.globalAlpha = 1;
+            requestAnimationFrame(animateParticles);
         }
-        animate();
+        animateParticles();
 
-        // Reaccionar al tamaño de ventana
+        // Ajustar al redimensionar
         window.addEventListener('resize', () => {
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
