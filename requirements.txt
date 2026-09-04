@@ -1,0 +1,11 @@
+# Core
+reportlab
+qrcode[pil]
+requests
+web3
+ipfshttpclient
+
+# Pruebas y calidad
+pytest
+flake8
+mypy
