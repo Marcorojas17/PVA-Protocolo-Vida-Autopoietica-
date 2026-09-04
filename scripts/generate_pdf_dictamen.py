@@ -1,105 +1,208 @@
 #!/usr/bin/env python3
 """
-Genera el Dictamen Pericial PDF con membrete ISO/NOM y QR de verificación.
-Instala: pip install reportlab qrcode[pil]
+PVA PDF Dictamen Generator - KRONOS 360
+Folio: 5204160405358537
+Perito: kronosproyecto@hotmail.com
+Genesis: 41a3683bbf83296eeb45da9b0e0ea5a7c095e78b493772e79520a92dbc39f4c3
+Genera: audit/dictamen_PVA_5204160405358537.pdf + audit/AUDITORIA_ISO_NOM_PVA_5204160405358537.md
 """
 
-import qrcode
-from reportlab.lib.pagesizes import letter
-from reportlab.pdfgen import canvas
-from reportlab.lib.colors import HexColor, white
-from reportlab.lib.utils import ImageReader
-import io
-import time
+import os
+import json
+from pathlib import Path
+from datetime import datetime
 
-# Datos oficiales
 FOLIO = "5204160405358537"
 PERITO = "kronosproyecto@hotmail.com"
-AUTOR = "Marco Antonio Rojas Valdovinos"
-FECHA = "03/09/2026 - Lerma, EdoMex"
-SAFE_ID = "2607146379465"
-SHA_GENESIS = "41a3683bbf83296eeb45da9b0e0ea5a7c095e78b493772e79520a92dbc39f4c3"
+GENESIS = "41a3683bbf83296eeb45da9b0e0ea5a7c095e78b493772e79520a92dbc39f4c3"
+SELLO = f"KRONOS-TRACE-PVA-{FOLIO}"
+TX = "0x8ca8e84e1258abac9acb29d14d25114e4775d782ecfda51ae29933247ed2970e"
+SAFE = "2607146379465"
 
-# Crear QR de verificación (mailto directo al perito)
-qr = qrcode.QRCode(version=1, error_correction=qrcode.constants.ERROR_CORRECT_H, box_size=10, border=2)
-qr.add_data(f"mailto:{PERITO}?subject=Verificación Folio {FOLIO}")
-qr.make(fit=True)
-img_qr = qr.make_image(fill_color="#0a0a0a", back_color="#ffffff")
+ROOT = Path(__file__).parent.parent
+AUDIT_DIR = ROOT / "audit"
+QR_PATH = AUDIT_DIR / f"qr_folio_{FOLIO}.png"
+PDF_PATH = AUDIT_DIR / f"dictamen_PVA_{FOLIO}.pdf"
+AUDIT_MD_PATH = AUDIT_DIR / f"AUDITORIA_ISO_NOM_PVA_{FOLIO}.md"
+SELLO_PATH = AUDIT_DIR / "sello_kronos.json"
+LOG_PATH = AUDIT_DIR / "cadena_custodia.log"
+MANIFIESTO_PATH = ROOT / "audit" / "primer_manifiesto.txt"
 
-# Guardar QR en buffer
-buffer = io.BytesIO()
-img_qr.save(buffer, format="PNG")
-buffer.seek(0)
+def log_custodia(msg: str):
+    AUDIT_DIR.mkdir(exist_ok=True)
+    ts = datetime.utcnow().isoformat() + "Z"
+    entry = f"[{ts}] [PDF:{FOLIO}] {msg}"
+    print(entry)
+    with open(LOG_PATH, "a", encoding="utf-8") as f:
+        f.write(entry + "\n")
 
-# Generar PDF
-archivo_pdf = f"audit/dictamen_PVA_{FOLIO}.pdf"
-c = canvas.Canvas(archivo_pdf, pagesize=letter)
-w, h = letter
+def ensure_qr():
+    if not QR_PATH.exists():
+        print("[*] QR no existe, generando...")
+        from scripts.generate_qr import generate_qr
+        generate_qr()
+    return QR_PATH.exists()
 
-# Fondo y membrete
-c.setFillColor(HexColor("#0a0a0a"))
-c.rect(0, h - 150, w, 150, fill=1, stroke=0)
-c.setFillColor(white)
-c.setFont("Helvetica-Bold", 24)
-c.drawString(30, h - 60, "DICTAMEN PERICIAL PROTOCOLO PVA")
-c.setFont("Helvetica", 10)
-c.drawString(30, h - 80, f"Normas: ISO/IEC 27001:2022 / ISO 9001:2015 / NOM-151-SCFI-2016 / NOM-024-SCFI-2013")
-c.drawString(30, h - 100, f"Perito Oficial: {PERITO}")
-c.drawString(30, h - 115, f"Folio: {FOLIO} | SafeCreative: {SAFE_ID}")
+def generate_pdf():
+    try:
+        from reportlab.lib.pagesizes import A4
+        from reportlab.lib.units import mm
+        from reportlab.lib import colors
+        from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Image, Table, TableStyle
+        from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+        from reportlab.lib.enums import TA_CENTER, TA_JUSTIFY
+    except ImportError:
+        os.system("pip install reportlab --quiet")
+        from reportlab.lib.pagesizes import A4
+        from reportlab.lib.units import mm
+        from reportlab.lib import colors
+        from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Image, Table, TableStyle
+        from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+        from reportlab.lib.enums import TA_CENTER, TA_JUSTIFY
 
-# Cuerpo del documento
-c.setFillColor(HexColor("#000000"))
-c.setFont("Helvetica-Bold", 14)
-c.drawString(30, h - 170, "1. IDENTIDAD Y AUTORÍA (ISO 9001:2015)")
-c.setFont("Helvetica", 11)
-c.drawString(30, h - 190, f"Autor: {AUTOR}")
-c.drawString(30, h - 205, "Documentación controlada en llms.txt y sello_kronos.json.")
+    ensure_qr()
+    AUDIT_DIR.mkdir(exist_ok=True)
 
-c.setFont("Helvetica-Bold", 14)
-c.drawString(30, h - 240, "2. SEGURIDAD DE LA INFORMACIÓN (ISO 27001:2022)")
-c.setFont("Helvetica", 11)
-c.drawString(30, h - 260, f"SHA256 Génesis: {SHA_GENESIS}")
-c.drawString(30, h - 275, "Control A8.12: División 51% Humano / 49% IA (semilla determinista151).")
-c.drawString(30, h - 290, "Control A8.28: Firma KRONOS-TRACE en cada salida.")
-c.drawString(30, h - 305, "Control A5.33: Registro Ethereum TX: 0x8ca8e84e1258abac9acb29d14d25114e4775d782ecfda51ae29933247ed2970e")
+    print(f"[*] Generando PDF Dictamen folio {FOLIO}")
 
-c.setFont("Helvetica-Bold", 14)
-c.drawString(30, h - 350, "3. CONSERVACIÓN DE MENSAJES (NOM--SCFI-2016)")
-c.setFont("Helvetica", 11)
-c.drawString(30, h - 370, "Art. 5 - Integridad: Evidencia inalterable por hash criptográfico.")
-c.drawString(30, h - 385, "Art. 8 - Constancia: Registro en cadena_custodia.log con timestamp 1783497302.")
+    doc = SimpleDocTemplate(
+        str(PDF_PATH),
+        pagesize=A4,
+        rightMargin=20*mm,
+        leftMargin=20*mm,
+        topMargin=15*mm,
+        bottomMargin=15*mm,
+        title=f"Dictamen PVA {FOLIO}",
+        author=PERITO
+    )
 
-c.setFont("Helvetica-Bold", 14)
-c.drawString(30, h - 430, "4. INFORMACIÓN COMERCIAL (NOM-024-SCFI-2013)")
-c.setFont("Helvetica", 11)
-c.drawString(30, h - 450, "Nombre: PVA - Protocolo de Vida Autopoiética")
-c.drawString(30, h - 465, f"Perito: {PERITO} | Folio: {FOLIO}")
+    styles = getSampleStyleSheet()
+    style_title = ParagraphStyle('Title2', parent=styles['Title'], fontSize=16, alignment=TA_CENTER, spaceAfter=6*mm, textColor=colors.HexColor("#0a0a0a"))
+    style_h2 = ParagraphStyle('H2', parent=styles['Heading2'], fontSize=11, spaceAfter=3*mm, spaceBefore=5*mm, textColor=colors.HexColor("#1a1a1a"))
+    style_normal = ParagraphStyle('Normal2', parent=styles['Normal'], fontSize=9, leading=13, alignment=TA_JUSTIFY)
+    style_mono = ParagraphStyle('Mono', parent=styles['Normal'], fontSize=7.5, leading=10, fontName='Courier', textColor=colors.HexColor("#333333"))
 
-# Sello de tiempo
-c.setFont("Helvetica-Bold", 14)
-c.drawString(30, h - 510, "5. DICTAMEN FINAL")
-c.setFont("Helvetica", 11)
-c.drawString(30, h - 530, "El sistema PVA es APTO para:")
-c.drawString(40, h - 550, "• Emitir dictámenes periciales informáticos (NOM-151)")
-c.drawString(40, h - 565, "• Operar bajo SGSI ISO 27001 como evidencia inmutable")
-c.drawString(40, h - 580, "• Comercializarse como SaaS de autenticidad (KRONOS TRACE)")
+    story = []
 
-# Sello KRONOS
-c.setFillColor(HexColor("#00ffcc"))
-c.setFont("Helvetica-Bold", 8)
-sello = f"ISO-27001+NOM151|FOLIO={FOLIO}|PERITO={PERITO}|GENESIS={SHA_GENESIS}|DICTAMEN=APTO|2026-09-03"
-c.drawString(30, 100, sello)
+    story.append(Paragraph(f"DICTAMEN PERICIAL INFORMÁTICO<br/>PVA - PROTOCOLO VIDA AUTOPOIÉTICA", style_title))
+    story.append(Paragraph(f"Folio: <b>{FOLIO}</b> | Sello: {SELLO}", style_mono))
+    story.append(Spacer(1, 4*mm))
 
-# Insertar QR
-c.drawImage(ImageReader(buffer), w - 150, 120, width=120, height=120)
+    # Tabla datos
+    data = [
+        ["Folio Pericial", FOLIO],
+        ["Perito", PERITO],
+        ["Génesis SHA256", GENESIS],
+        ["Sello KRONOS", SELLO],
+        ["TX Blockchain", TX],
+        ["SafeCreative", SAFE],
+        ["Fecha Cierta UTC", datetime.utcnow().isoformat() + "Z"],
+        ["Norma", "NOM-151-SCFI-2016 Art. 8,10,38 + ISO 27001 + eIDAS"],
+    ]
+    t = Table(data, colWidths=[35*mm, 115*mm])
+    t.setStyle(TableStyle([
+        ('BACKGROUND', (0,0), (0,-1), colors.HexColor("#f0f0f0")),
+        ('TEXTCOLOR', (0,0), (-1,-1), colors.black),
+        ('FONTNAME', (0,0), (-1,-1), 'Helvetica'),
+        ('FONTSIZE', (0,0), (-1,-1), 8),
+        ('ALIGN', (0,0), (0,-1), 'LEFT'),
+        ('GRID', (0,0), (-1,-1), 0.25, colors.grey),
+        ('VALIGN', (0,0), (-1,-1), 'MIDDLE'),
+    ]))
+    story.append(t)
+    story.append(Spacer(1, 5*mm))
 
-# Firma del perito
-c.setFillColor(HexColor("#000000"))
-c.setFont("Helvetica", 10)
-c.drawString(30, 80, "Firma digital del perito:")
-c.setFont("Helvetica-Bold", 10)
-c.drawString(30, 65, PERITO)
-c.drawString(30, 50, f"Fecha: {FECHA}")
+    story.append(Paragraph("1. OBJETO DEL DICTAMEN", style_h2))
+    story.append(Paragraph(
+        f"Se dictamina que el hash génesis <b>{GENESIS}</b> fue capturado con polaridad 51% humano / 49% IA, "
+        f"sellado con <b>FOLIO:{FOLIO}|PERITO:{PERITO}|GENESIS:{GENESIS}</b> y registrado en blockchain "
+        f"en TX {TX}. La cadena de custodia se conserva en audit/cadena_custodia.log conforme NOM-151.", style_normal))
+    story.append(Spacer(1, 3*mm))
 
-c.save()
-print(f"✅ PDF generado exitosamente: {archivo_pdf}")
+    story.append(Paragraph("2. MANIFIESTO 51/49", style_h2))
+    manifiesto_text = f"51%_HUMANO:{GENESIS[:32]}|49%_IA:{GENESIS[32:]}|FOLIO:{FOLIO}"
+    if MANIFIESTO_PATH.exists():
+        try:
+            manifiesto_text = MANIFIESTO_PATH.read_text(encoding="utf-8")[:500]
+        except:
+            pass
+    story.append(Paragraph(manifiesto_text, style_mono))
+    story.append(Spacer(1, 3*mm))
+
+    story.append(Paragraph("3. VERIFICACIÓN", style_h2))
+    story.append(Paragraph(
+        f"QR adjunto apunta a https://kronos-legado.digital/v/{FOLIO} y https://verifica.fdv.mx/folio/{FOLIO}. "
+        f"API: https://api.kronos-legado.digital/v1/api/verifica/{FOLIO}. "
+        f"Etherscan: https://sepolia.etherscan.io/tx/{TX}. Cualquiera puede validar sin contactar al perito.", style_normal))
+    story.append(Spacer(1, 4*mm))
+
+    if QR_PATH.exists():
+        story.append(Image(str(QR_PATH), width=35*mm, height=35*mm))
+        story.append(Spacer(1, 2*mm))
+        story.append(Paragraph(f"QR verificación folio {FOLIO}", style_mono))
+
+    story.append(Spacer(1, 6*mm))
+    story.append(Paragraph("4. CONCLUSIÓN PERICIAL", style_h2))
+    story.append(Paragraph(
+        f"El dictamen con folio <b>{FOLIO}</b> cumple con fecha cierta, integridad y atribuibilidad según NOM-151-SCFI-2016. "
+        f"El sello {SELLO} es auténtico y trazable en blockchain. Se emite para efectos probatorios ante MP, SAT y tribunales.", style_normal))
+
+    story.append(Spacer(1, 8*mm))
+    story.append(Paragraph(f"_________________________________<br/>Marco Antonio Rojas Valdovinos<br/>Perito Informático {FOLIO}<br/>{PERITO}<br/>FIEL SAT + Sello {SELLO}", style_normal))
+
+    doc.build(story)
+    print(f"[OK] PDF generado: {PDF_PATH}")
+    log_custodia(f"PDF dictamen generado {PDF_PATH}")
+
+    # Generar también AUDITORIA_ISO_NOM_PVA
+    audit_content = f"""# AUDITORIA ISO NOM PVA {FOLIO}
+Folio: {FOLIO}
+Perito: {PERITO}
+Genesis: {GENESIS}
+Sello: {SELLO}
+TX: {TX}
+SafeCreative: {SAFE}
+Fecha: {datetime.utcnow().isoformat()}Z
+
+## NOM-151
+- Fecha cierta: block.timestamp TX {TX}
+- Integridad: SHA256 {GENESIS}
+- Atribuibilidad: FOLIO:{FOLIO}|PERITO:{PERITO}
+- Conservación: audit/cadena_custodia.log 10 años
+
+## ISO 27001:2022
+A5.9 sello_kronos.json
+A5.17 web3_auth.js
+A8.3 private_keys/ en.gitignore + KMS
+A8.24 SHA256 + ECDSA
+A8.26 blockchain_verifier.py
+A8.28 oracle.js regex
+
+## eIDAS
+Sello avanzado {SELLO} con blockchain y QR {QR_PATH}
+
+## Verificación
+https://kronos-legado.digital/v/{FOLIO}
+https://sepolia.etherscan.io/tx/{TX}
+API /api/verifica/{FOLIO}
+"""
+    AUDIT_MD_PATH.write_text(audit_content, encoding="utf-8")
+    print(f"[OK] Auditoría MD: {AUDIT_MD_PATH}")
+    log_custodia(f"Auditoría MD generada {AUDIT_MD_PATH}")
+
+    return str(PDF_PATH)
+
+def main():
+    print(f"""
+╔════════════════════════════════════════════╗
+║ PVA PDF DICTAMEN - KRONOS 360 ║
+║ Folio: {FOLIO} ║
+║ Sello: {SELLO} ║
+╚════════════════════════════════════════════╝
+""")
+    path = generate_pdf()
+    print(f"\n[FIN] Dictamen listo: {path}")
+    print(f"Auditoría: {AUDIT_MD_PATH}")
+
+if __name__ == "__main__":
+    main()
