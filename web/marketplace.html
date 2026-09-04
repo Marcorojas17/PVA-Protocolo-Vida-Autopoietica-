@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mercado PVA - Adquiere tu Dictamen</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://js.stripe.com/v3/"></script>
+</head>
+<body>
+    <canvas id="matrix-canvas"></canvas>
+    <nav class="cyber-nav">
+        <h1 class="glitch" data-text="PVA_MARKET">PVA_MARKET</h1>
+        <a href="index.html">Inicio</a>
+    </nav>
+
+    <main class="holo-card">
+        <h2 class="neon-green">Adquiere tu Protocolo de Vida Autopoietica</h2>
+        <p class="gold-text">Dictámenes con validez NOM-151, eIDAS y sello blockchain</p>
+
+        <!-- Nivel 1 -->
+        <div class="plan-card" data-price="9">
+            <h3>Nivel 1 - Manifiesto</h3>
+            <p>Genera tu manifiesto 51/49 con hash único y sello pericial.</p>
+            <p class="price">$9 USD</p>
+            <button class="neon-btn" onclick="buyPlan(9, 'Manifiesto Básico')">Pagar con Tarjeta</button>
+            <button class="neon-btn gold" onclick="payWithCrypto(9000000000000000000, 'Manifiesto Básico')">Pagar con ETH</button>
+        </div>
+
+        <!-- Nivel 2 -->
+        <div class="plan-card" data-price="49">
+            <h3>Nivel 2 - Dictamen PDF</h3>
+            <p>Incluye PDF con membrete ISO/NOM, QR de verificación y sello KRONOS.</p>
+            <p class="price">$49 USD</p>
+            <button class="neon-btn" onclick="buyPlan(49, 'Dictamen PDF')">Pagar con Tarjeta</button>
+            <button class="neon-btn gold" onclick="payWithCrypto(49000000000000000000, 'Dictamen PDF')">Pagar con ETH</button>
+        </div>
+
+        <!-- Nivel 3 -->
+        <div class="plan-card" data-price="199">
+            <h3>Nivel 3 - Auditoría Forense</h3>
+            <p>Dictamen completo + cadena de custodia + validación FIEL del perito.</p>
+            <p class="price">$199 USD</p>
+            <button class="neon-btn" onclick="buyPlan(199, 'Auditoría Forense')">Pagar con Tarjeta</button>
+            <button class="neon-btn gold" onclick="payWithCrypto(199000000000000000000, 'Auditoría Forense')">Pagar con ETH</button>
+        </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/web3@1.10.0/dist/web3.min.js"></script>
+    <script src="js/web3_auth.js"></script>
+    <script>
+        // Configura tu clave pública de Stripe
+        const stripe = Stripe('pk_test_TU_CLAVE_PUBLICA_STRIPE');
+
+        async function buyPlan(price, planName) {
+            const response = await fetch('/api/create-checkout-session', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ price, planName })
+            });
+            const session = await response.json();
+            const result = await stripe.redirectToCheckout({ sessionId: session.id });
+            if (result.error) alert(result.error.message);
+        }
+
+        async function payWithCrypto(priceInWei, planName) {
+            if (!web3 || !userAccount) await connectWallet();
+            const txHash = await payForDictamen(priceInWei);
+            if (txHash) {
+                alert('Pago recibido. Generando dictamen...');
+                await generateManifestoWithPayment(txHash);
+            }
+        }
+    </script>
+</body>
+</html>
