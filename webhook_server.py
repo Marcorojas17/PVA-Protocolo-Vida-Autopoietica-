@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 import os
 import threading
-from flask import Flask, request
+from flask import Flask, request, jsonify
+from flask_cors import CORS
 from mercadopago.webhook import WebhookSignatureValidator, InvalidWebhookSignatureError
 from dotenv import load_dotenv
 
@@ -11,7 +12,17 @@ MP_ACCESS_TOKEN = os.getenv("MP_ACCESS_TOKEN")
 MP_WEBHOOK_SECRET = os.getenv("MP_WEBHOOK_SECRET")
 
 app = Flask(__name__)
+CORS(app)  # Habilita CORS para que GitHub Pages pueda llamar a tu API
 
+# Configuración de precios
+PRECIOS = {1: 500.0, 2: 1500.0, 3: 3500.0}
+TITULOS = {
+    1: "Sello KRONOS Nivel 1 - Dictamen PDF + QR",
+    2: "Sello KRONOS Nivel 2 - Auditoría ISO + Blockchain",
+    3: "Plan Enjambre - Protección 24/7 mensual",
+}
+
+# ------- WEBHOOK (pagos) -------
 def procesar_evento(data_id: str):
     print(f"[WEBHOOK] Procesando pago {data_id}...")
     try:
@@ -56,6 +67,45 @@ def webhook():
         return ("", 401)
     threading.Thread(target=procesar_evento, args=(data_id,), daemon=True).start()
     return ("", 200)
+
+# ------- NUEVO ENDPOINT: /api/create_preference -------
+@app.route('/api/create_preference', methods=['POST'])
+def create_preference():
+    if not MP_ACCESS_TOKEN:
+        return jsonify({"error": "missing access token"}), 500
+
+    body = request.get_json(silent=True) or {}
+    nivel = int(body.get("nivel", 1))
+    folio = str(body.get("folio", "5204160405358537"))
+
+    if nivel not in PRECIOS:
+        return jsonify({"error": "invalid nivel"}), 400
+
+    sdk = mercadopago.SDK(MP_ACCESS_TOKEN)
+
+    preference_data = {
+        "items": [{
+            "title": TITULOS[nivel],
+            "quantity": 1,
+            "unit_price": PRECIOS[nivel],
+            "currency_id": "MXN",
+        }],
+        "external_reference": folio,
+        "back_urls": {
+            "success": os.getenv("MP_SUCCESS_URL"),
+            "failure": os.getenv("MP_FAILURE_URL"),
+            "pending": os.getenv("MP_PENDING_URL"),
+        },
+        "auto_return": "approved",
+    }
+
+    result = sdk.preference().create(preference_data)
+    pref = result.get("response") or {}
+
+    return jsonify({
+        "preference_id": pref.get("id"),
+        "init_point": pref.get("init_point"),
+    }), 200
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8081, debug=True)
