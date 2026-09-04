@@ -8,3 +8,4 @@ __pycache__/
 .DS_Store
 __pycache__/
 *.pyc
+generar_pagos_1_2.py
