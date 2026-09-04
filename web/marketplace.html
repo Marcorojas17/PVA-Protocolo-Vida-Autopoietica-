@@ -16,14 +16,12 @@
         }
         body::before {
             content: "";
-            position: fixed;
-            top: 0; left: 0; width: 100vw; height: 100vh;
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
             background-image:
                 linear-gradient(rgba(0,255,150,0.05) 1px, transparent 1px),
                 linear-gradient(90deg, rgba(0,255,150,0.05) 1px, transparent 1px);
             background-size: 40px 40px;
-            z-index: 0;
-            pointer-events: none;
+            z-index: 0; pointer-events: none;
         }
         .scan-line {
             position: fixed; top: 0; left: 0; width: 100%; height: 3px;
@@ -71,7 +69,6 @@
 
         .service-title { font-size: 1.5rem; color: #fff; letter-spacing: 2px; margin-bottom: 1rem; font-weight: 300; text-transform: uppercase; }
 
-        /* ---- BLOQUE DE EJEMPLO (Muestra) ---- */
         .sample-box {
             background: #0a0f0a; border: 1px solid #1f4a3a; padding: 1.2rem;
             margin-bottom: 1.5rem; position: relative;
@@ -91,14 +88,8 @@
             width: 70px; height: 70px; background: repeating-linear-gradient(45deg, #fff, #fff 4px, #000 4px, #000 8px);
             border: 2px solid #00ffcc; margin: 0.5rem 0;
         }
-        .sample-box .mini-chain {
-            font-size: 0.65rem; color: #888; margin-top: 0.5rem;
-            border-left: 2px solid #00ffcc; padding-left: 0.5rem;
-        }
-        .sample-box .validation-box {
-            background: #001a10; border: 1px solid #00ffcc; padding: 0.8rem; font-size: 0.75rem;
-            color: #00ffcc; text-align: center; font-weight: bold;
-        }
+        .sample-box .mini-chain { font-size: 0.65rem; color: #888; margin-top: 0.5rem; border-left: 2px solid #00ffcc; padding-left: 0.5rem; }
+        .sample-box .validation-box { background: #001a10; border: 1px solid #00ffcc; padding: 0.8rem; font-size: 0.75rem; color: #00ffcc; text-align: center; font-weight: bold; }
 
         .price-box { background: #000; border-left: 4px solid #00ffcc; padding: 0.8rem 1.2rem; margin-bottom: 1.5rem; }
         .price-box .price { font-size: 2.5rem; font-weight: 900; color: #00ffcc; display: block; line-height: 1; }
@@ -150,17 +141,13 @@
                 <div class="sample-code"><span>MUESTRA: N1-DICTAMEN</span><span>📄 PDF + QR</span></div>
                 <div class="service-title">Dictamen Inicial</div>
 
-                <!-- Ejemplo de lo que incluye el N1 -->
                 <div class="sample-box">
                     <div class="mini-doc">
                         <strong>DICTAMEN PERICIAL</strong><br>
                         Folio: <span class="folio">5204160405358537</span><br>
                         Perito: kronosproyecto@hotmail.com<br>
                         Hash: <span class="hash">41a3683b...c4c3</span><br>
-                        <div class="footer">
-                            <span>Firma KRONOS</span>
-                            <span>Fecha: 08/07/2026</span>
-                        </div>
+                        <div class="footer"><span>Firma KRONOS</span><span>Fecha: 08/07/2026</span></div>
                     </div>
                     <div class="mini-qr"></div>
                     <div class="mini-chain">QR de verificación NOM-151</div>
@@ -181,7 +168,6 @@
                 <div class="sample-code"><span>MUESTRA: N2-AUDITORIA</span><span>⭐ PRO</span></div>
                 <div class="service-title">Auditoría ISO + Blockchain</div>
 
-                <!-- Ejemplo de lo que incluye el N2 -->
                 <div class="sample-box">
                     <div class="mini-doc">
                         <strong>AUDITORÍA COMPLETA</strong><br>
@@ -213,7 +199,6 @@
                 <div class="sample-code"><span>MUESTRA: V-FREE</span><span>🔍 VERIFY</span></div>
                 <div class="service-title">Verificación Pública</div>
 
-                <!-- Ejemplo de resultado -->
                 <div class="sample-box">
                     <div class="validation-box">
                         ✅ FOLIO VALIDADO<br>
