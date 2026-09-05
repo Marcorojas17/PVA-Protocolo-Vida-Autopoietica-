@@ -15,9 +15,16 @@
         .price { font-size: 2.5rem; color: #00ffcc; font-weight: bold; }
         .feature-list { list-style: none; text-align: left; margin: 15px 0; }
         .feature-list li { padding: 5px 0; border-bottom: 1px dotted #333; }
-        .action-btn { display: block; width: 100%; padding: 15px; background: #00ffcc; color: #000; text-decoration: none; border-radius: 8px; font-weight: bold; margin-top: 10px; }
+        .action-btn { display: block; width: 100%; padding: 15px; background: #00ffcc; color: #000; text-decoration: none; border-radius: 8px; font-weight: bold; margin-top: 10px; cursor: pointer; border: none; }
         .action-btn:hover { background: #D4AF37; }
         .footer { text-align: center; margin-top: 30px; font-size: .8rem; color: #555; }
+        
+        /* Pantalla de proceso */
+        #proceso { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 9999; justify-content: center; align-items: center; flex-direction: column; }
+        #proceso h2 { color: #00ffcc; margin-bottom: 20px; }
+        #proceso p { color: #aaa; margin-bottom: 10px; }
+        .barra { width: 300px; height: 10px; background: #333; border-radius: 5px; overflow: hidden; }
+        .barra-fill { width: 0%; height: 100%; background: linear-gradient(90deg, #00ffcc, #D4AF37); transition: width 0.3s; }
     </style>
 </head>
 <body>
@@ -27,49 +34,72 @@
     </div>
     <div class="container">
         <h1 style="text-align:center; color:#00ffcc;">🛒 LABORATORIO FORENSE - KRONOS 360</h1>
-        <p style="text-align:center; margin-bottom:30px;">Planes de prueba: $10 y $20 MXN. Demo gratis.</p>
         <div class="services-grid">
             <div class="service-panel">
                 <div style="font-size:1.5rem; color:#fff; margin-bottom:10px;">Nivel 1 - Dictamen</div>
-                <div style="margin:15px 0;"><span class="price">$10</span> MXN</div>
-                <ul class="feature-list">
-                    <li>PDF con folio</li>
-                    <li>QR de verificación</li>
-                    <li>Sello KRONOS</li>
-                </ul>
+                <div style="margin:15px 0;"><span class="price">GRATIS</span> MXN</div>
+                <ul class="feature-list"><li>PDF con folio</li><li>QR de verificación</li><li>Sello KRONOS</li></ul>
                 <button onclick="demoPlan(1)" class="action-btn">VER PROCESO NIVEL 1</button>
             </div>
             <div class="service-panel">
                 <div style="font-size:1.5rem; color:#fff; margin-bottom:10px;">Nivel 2 - Auditoría ISO</div>
-                <div style="margin:15px 0;"><span class="price">$20</span> MXN</div>
-                <ul class="feature-list">
-                    <li>Todo Nivel 1</li>
-                    <li>Certificado ISO</li>
-                    <li>Verificación blockchain</li>
-                </ul>
+                <div style="margin:15px 0;"><span class="price">GRATIS</span> MXN</div>
+                <ul class="feature-list"><li>Todo Nivel 1</li><li>Certificado ISO</li><li>Verificación blockchain</li></ul>
                 <button onclick="demoPlan(2)" class="action-btn">VER PROCESO NIVEL 2</button>
             </div>
             <div class="service-panel">
                 <div style="font-size:1.5rem; color:#fff; margin-bottom:10px;">Plan Demo</div>
                 <div style="margin:15px 0;"><span class="price">GRATIS</span> MXN</div>
-                <ul class="feature-list">
-                    <li>Verificación pública</li>
-                    <li>Muestra del paquete 2</li>
-                    <li>Sin costo</li>
-                </ul>
+                <ul class="feature-list"><li>Verificación pública</li><li>Muestra del paquete 2</li><li>Sin costo</li></ul>
                 <a href="./verification.html" class="action-btn" style="background:#D4AF37;">PROBAR DEMO GRATIS</a>
             </div>
         </div>
         <div class="footer">© 2026 Marco Antonio Rojas Valdovinos</div>
     </div>
+
+    <!-- Pantalla de proceso -->
+    <div id="proceso">
+        <h2 id="proceso-titulo">Procesando...</h2>
+        <p id="proceso-detalle">Iniciando...</p>
+        <div class="barra"><div class="barra-fill" id="barra-fill"></div></div>
+    </div>
+
     <script>
         function demoPlan(nivel) {
+            // Mostrar pantalla de proceso
+            document.getElementById('proceso').style.display = 'flex';
+            let titulo = document.getElementById('proceso-titulo');
+            let detalle = document.getElementById('proceso-detalle');
+            let barra = document.getElementById('barra-fill');
+            
+            // Reiniciar barra
+            barra.style.width = '0%';
+            
+            // Configurar mensajes
+            let pasos = [];
             if (nivel === 1) {
-                alert("🛠️ PROCESO NIVEL 1\\n\\n1. Generando folio único...\\n2. Aplicando sello KRONOS-TRACE...\\n3. Creando PDF con QR...\\n4. Listo. Ahora verás la verificación.");
-            } else if (nivel === 2) {
-                alert("🛠️ PROCESO NIVEL 2\\n\\n1. Generando folio único...\\n2. Aplicando sello KRONOS-TRACE...\\n3. Verificando blockchain (Ethereum)...\\n4. Certificado ISO 27001 integrado...\\n5. Listo. Ahora verás la verificación.");
+                titulo.innerText = "PROCESO NIVEL 1";
+                pasos = ["Generando folio único...", "Aplicando sello KRONOS-TRACE...", "Creando PDF con QR...", "Listo. Verificando..."];
+            } else {
+                titulo.innerText = "PROCESO NIVEL 2";
+                pasos = ["Generando folio único...", "Aplicando sello KRONOS-TRACE...", "Verificando blockchain (Ethereum)...", "Certificado ISO 27001 integrado...", "Listo. Verificando..."];
             }
-            setTimeout(() => { window.location.href = "verification.html"; }, 1500);
+            
+            // Animar pasos
+            let paso = 0;
+            let intervalo = setInterval(() => {
+                if (paso < pasos.length) {
+                    detalle.innerText = pasos[paso];
+                    barra.style.width = ((paso + 1) / pasos.length) * 100 + '%';
+                    paso++;
+                } else {
+                    clearInterval(intervalo);
+                    detalle.innerText = "Proceso completado. Redirigiendo...";
+                    setTimeout(() => {
+                        window.location.href = "verification.html";
+                    }, 1500);
+                }
+            }, 800);
         }
     </script>
 </body>
