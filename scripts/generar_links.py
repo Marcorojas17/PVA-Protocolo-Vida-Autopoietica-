@@ -1,79 +1,113 @@
 #!/usr/bin/env python3
-import os, json
+"""
+PVA Generar Links - KRONOS 360 MT01JAAF SHA a4ff808e
+Genera web/certificado.html con TRACE completo
+"""
+
+import json
 from pathlib import Path
-from dotenv import load_dotenv
-import mercadopago
+from datetime import datetime
 
-load_dotenv()
-
-MP_ACCESS_TOKEN = os.getenv("MP_ACCESS_TOKEN")
-MP_SUCCESS_URL = os.getenv("MP_SUCCESS_URL")
-MP_FAILURE_URL = os.getenv("MP_FAILURE_URL")
-MP_PENDING_URL = os.getenv("MP_PENDING_URL")
-MP_NOTIFICATION_URL = os.getenv("MP_NOTIFICATION_URL")
-
-if not MP_ACCESS_TOKEN:
-    raise RuntimeError("Falta MP_ACCESS_TOKEN en.env - AUDITORIA 100/10 FALLIDA")
-
-sdk = mercadopago.SDK(MP_ACCESS_TOKEN)
-
-# FOLIOS PERICIALES 100/10
 FOLIO_MAESTRO = "5204160405358537"
 FOLIO_PERICIAL = "KRONOS-MT01JAAF"
 SHA = "a4ff808e"
-HASH_GENESIS = "41a3683bbf83296eeb45da9b0e0ea5a7c095e78b493772e79520a92dbc39f4c3"
+GENESIS = "41a3683bbf83296eeb45da9b0e0ea5a7c095e78b493772e79520a92dbc39f4c3"
+SELLO = "KRONOS-TRACE-PVA-5204160405358537-MT01JAAF"
+SC = "2607146379465"
+TX = "0x8ca8e84e1258abac9acb29d14d25114e4775d782ecfda51ae29933247ed2970e"
+CHAIN_ID = 80002
 
-niveles = {
-    1: {"titulo": "Sello KRONOS Nivel 1 - Dictamen PDF + QR", "precio": 500.00},
-    2: {"titulo": "Sello KRONOS Nivel 2 - Auditoría ISO + Blockchain", "precio": 1500.00},
-    3: {"titulo": "Plan Enjambre - Protección 24/7 mensual", "precio": 3500.00},
-}
+ROOT = Path(__file__).parent.parent
+WEB_DIR = ROOT / "web"
+AUDIT_DIR = ROOT / "audit"
+LOG_PATH = AUDIT_DIR / "cadena_custodia.log"
 
-links_output = {}
+URL_GITHUB = "https://jas17.github.io/PVA-Protocolo-Vida-Autopoietica-/"
+URL_CERT = f"{URL_GITHUB}web/certificado.html"
 
-for nivel, datos in niveles.items():
-    preference_data = {
-        "items": [{
-            "title": datos["titulo"],
-            "quantity": 1,
-            "unit_price": float(datos["precio"]),
-            "currency_id": "MXN",
-            "description": f"{FOLIO_PERICIAL} - {SHA} - ISO27037"
-        }],
-        "external_reference": f"{FOLIO_MAESTRO}-N{nivel}-{FOLIO_PERICIAL}",
-        "metadata": {
-            "folio_maestro": FOLIO_MAESTRO,
-            "folio_pericial": FOLIO_PERICIAL,
-            "sha": SHA,
-            "hash_genesis": HASH_GENESIS,
-            "nivel": nivel
-        },
-        "back_urls": {
-            "success": MP_SUCCESS_URL,
-            "failure": MP_FAILURE_URL,
-            "pending": MP_PENDING_URL
-        },
-        "auto_return": "approved",
-        "notification_url": MP_NOTIFICATION_URL,
-        "statement_descriptor": f"KRONOS N{nivel}"
+
+def log_custodia(msg: str):
+    AUDIT_DIR.mkdir(exist_ok=True)
+    ts = datetime.utcnow().isoformat() + "Z"
+    entry = f"[{ts}] [LINKS:{FOLIO_MAESTRO}:{FOLIO_PERICIAL}:{SHA}] {msg}"
+    print(entry)
+    with open(LOG_PATH, "a", encoding="utf-8") as f:
+        f.write(entry + "\n")
+
+
+def main():
+    print(
+        f"╔══════════════════════════════════════════════════╗\n║ PVA LINKS MT01JAAF SHA {SHA} ║\n║ {SELLO} ║\n╚══════════════════════════════════════════════════╝"
+    )
+    WEB_DIR.mkdir(exist_ok=True)
+
+    cert_html = f"""<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Certificado PVA {FOLIO_PERICIAL} SHA {SHA}</title>
+<meta name="pva-folio-maestro" content="{FOLIO_MAESTRO}">
+<meta name="pva-folio-pericial" content="{FOLIO_PERICIAL}">
+<meta name="pva-sha" content="{SHA}">
+<meta name="pva-sello" content="{SELLO}">
+<meta name="pva-genesis" content="{GENESIS}">
+<meta name="pva-sc" content="{SC}">
+<meta name="pva-tx" content="{TX}">
+<meta name="pva-chain-id" content="{CHAIN_ID}">
+<style>body{{font-family:monospace;max-width:800px;margin:20px auto;padding:20px;background:#0a0a0a;color:#00ff88}}a{{color:#00ff88}}.box{{border:1px solid #00ff88;padding:15px;margin:15px 0}}</style>
+</head>
+<body>
+<h1>KRONOS 360 PVA 100/10 MT01JAAF</h1>
+<div class="box">
+<p><b>Folio Maestro:</b> {FOLIO_MAESTRO}</p>
+<p><b>Folio Pericial:</b> {FOLIO_PERICIAL}</p>
+<p><b>SHA:</b> {SHA}</p>
+<p><b>Sello TRACE:</b> {SELLO}</p>
+<p><b>Genesis:</b> {GENESIS}</p>
+<p><b>SC SafeCreative:</b> {SC}</p>
+<p><b>TX Amoy:</b> {TX}</p>
+<p><b>ChainId:</b> {CHAIN_ID} Polygon Amoy</p>
+<p><b>Fecha:</b> {datetime.utcnow().isoformat()}Z</p>
+</div>
+<div class="box">
+<p>Verificación:</p>
+<p><a href="https://amoy.polygonscan.com/tx/{TX}" target="_blank">Amoy Polygonscan TX</a></p>
+<p><a href="{URL_GITHUB}" target="_blank">GitHub Pages Oficial</a></p>
+<p><a href="../audit/sello_kronos.json" target="_blank">sello_kronos.json MT01JAAF</a></p>
+</div>
+<script>console.log("MT01JAAF {FOLIO_MAESTRO} {FOLIO_PERICIAL} {SHA} {SELLO}");</script>
+</body>
+</html>
+"""
+
+    cert_path = WEB_DIR / "certificado.html"
+    cert_path.write_text(cert_html, encoding="utf-8")
+    print(f"[OK] {cert_path}")
+
+    # links.json
+    links = {
+        "folio_maestro": FOLIO_MAESTRO,
+        "folio_pericial": FOLIO_PERICIAL,
+        "sha": SHA,
+        "sello": SELLO,
+        "genesis": GENESIS,
+        "sc": SC,
+        "tx": TX,
+        "chain_id": CHAIN_ID,
+        "chain": "Polygon Amoy",
+        "github_pages": URL_GITHUB,
+        "certificado": URL_CERT,
+        "polygonscan": f"https://amoy.polygonscan.com/tx/{TX}",
+        "qr": f"audit/qr_folio_{FOLIO_MAESTRO}_{FOLIO_PERICIAL}.png",
+        "sello_json": "audit/sello_kronos.json",
+        "generated": datetime.utcnow().isoformat() + "Z",
     }
+    (WEB_DIR / "links.json").write_text(json.dumps(links, indent=2), encoding="utf-8")
+    log_custodia(f"Links MT01JAAF generados {cert_path}")
 
-    result = sdk.preference().create(preference_data)
-    pref = result.get("response") or {}
-    init_point = pref.get("init_point") or pref.get("sandbox_init_point")
-    pref_id = pref.get("id")
+    print(f"[FIN] MT01JAAF Links 100/10 listo - {cert_path}")
 
-    print(f"Nivel {nivel} - {datos['titulo']} - ${datos['precio']} MXN")
-    print(f"External_ref: {preference_data['external_reference']}")
-    print(f"Link: {init_point}")
-    print(f"Preference ID: {pref_id}\n")
 
-    links_output[nivel] = {
-        "init_point": init_point,
-        "pref_id": pref_id,
-        "external_reference": preference_data["external_reference"]
-    }
-
-Path("web").mkdir(exist_ok=True)
-Path("web/links_pago.json").write_text(json.dumps(links_output, indent=2), encoding="utf-8")
-print("✅ web/links_pago.json actualizado - LUZ PRENDIDA OFFLINE")
+if __name__ == "__main__":
+    main()
