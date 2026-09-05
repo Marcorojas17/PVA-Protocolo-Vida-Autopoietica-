@@ -30,3 +30,7 @@ pva-deploy = "scripts.deploy_contract:main"
 
 [tool.setuptools.packages.find]
 include = ["core*", "scripts*", "contracts*"]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]
