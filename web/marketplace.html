@@ -73,7 +73,7 @@
                     <div class="trace-item"><h4>🛡️ Antifalsificación</h4><p>Firma digital de clave pública/privada. Solo el perito autorizado puede emitir certificados válidos.</p></div>
                 </div>
             </div>
-            <button class="download-btn" onclick="descargarOffline()">⬇️ DESCARGAR CERTIFICADO OFFLINE</button>
+            <button class="download-btn" onclick="descargarOffline()">⬇️ DESCARGAR CERTIFICADO OFFLINE CON QR</button>
         </div>
         <div class="footer">© 2026 Marco Antonio Rojas Valdovinos. Todos los derechos reservados.</div>
     </div>
@@ -82,7 +82,9 @@
         document.getElementById('hashDisplay').innerText = 'SHA-256: ' + hashActual;
         new QRCode(document.getElementById('qrcode'), { text: `KRONOS-5204-8537|${hashActual}|${new Date().toISOString()}|NOM151|ISO27037|POLYGON`, width: 150, height: 150 });
         function descargarOffline() {
-            // ⚠️ FIX CRÍTICO: \/script para que el navegador NO cierre el script principal
+            // ⚠️ FIX: Tomar el QR generado en la página e incrustarlo en el certificado offline
+            let qrCanvas = document.querySelector('#qrcode canvas');
+            let qrData = qrCanvas ? qrCanvas.toDataURL('image/png') : '';
             let offlineHTML = `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>KRONOS 360 - CERTIFICADO OFFLINE</title>
 <style>
 body{background:#020806;color:#c8d8d3;font-family:monospace;padding:20px}
@@ -91,6 +93,7 @@ body{background:#020806;color:#c8d8d3;font-family:monospace;padding:20px}
 @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(0,255,136,0.7)}70%{box-shadow:0 0 0 15px rgba(0,255,136,0)}100%{box-shadow:0 0 0 0 rgba(0,255,136,0)}}
 .gold{color:#D4AF37}
 .neon{color:#00ffcc}
+.qr-img{display:block;margin:20px auto;border:4px solid #fff;border-radius:10px}
 </style></head><body>
 <div class="card">
 <h2><span class="luz"></span> KRONOS 360 - CERTIFICADO ANTIFALSIFICABLE</h2>
@@ -102,6 +105,9 @@ body{background:#020806;color:#c8d8d3;font-family:monospace;padding:20px}
 <p><b>BLOCKCHAIN:</b> POLYGON - VERIFICABLE EN EXPLORER</p>
 <p><b>ARQUITECTURA:</b> ENJAMBRE DE 7 AGENTES + IPFS + AES-256</p>
 <p><b>SELLO:</b> VALIDO - NO ALTERADO - CADENA CONSERVADA</p>
+<!-- Aquí se coloca el QR incrustado -->
+${qrData ? `<img src="${qrData}" alt="QR Code" class="qr-img">` : ''}
+<p style="text-align:center;font-size:0.7rem;color:#aaa">Escanea el QR para verificar autenticidad en línea</p>
 <p style="margin-top:20px; font-size:0.8rem; color:#666">Este documento funciona sin internet. Las luces verdes indican que el protocolo de defensa sigue activo en local.</p>
 <p style="margin-top:15px"><span class="luz"></span> <span class="luz"></span> <span class="luz"></span> SISTEMA AUTOPOIÉTICO OPERATIVO</p>
 </div>
