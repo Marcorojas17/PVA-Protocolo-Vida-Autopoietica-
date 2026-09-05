@@ -1,23 +1,10 @@
-import hashlib
+"""
+hash_to_semantic - MT01JAAF SHA a4ff808e
+"""
 
-FOLIO = "5204160405358537"
+FOLIO_PERICIAL = "KRONOS-MT01JAAF"
+SHA = "a4ff808e"
 
-def hash_to_semantic_polarity(genesis_hash: str) -> str:
-    if not genesis_hash:
-        raise ValueError("hash vacío")
-    try:
-        int(genesis_hash, 16)
-    except ValueError:
-        raise ValueError(f"hash no es hex: {genesis_hash}")
-    return f"51% HUMANO - 49% MAQUINA - FOLIO:{FOLIO} - {genesis_hash[:8]} - 51%_HUMANO - 49%_IA"
-
-def generate_manifesto_from_hash(genesis_hash: str, pct_humano: int = 51, pct_maquina: int = 49) -> str:
-    if not genesis_hash or len(genesis_hash) < 10:
-        raise ValueError("hash inválido")
-    try:
-        int(genesis_hash, 16)
-    except ValueError:
-        raise ValueError("hash no hex")
-    hs = genesis_hash[:16]
-    suf = hashlib.sha256(genesis_hash.encode()).hexdigest()[:8]
-    return f"FOLIO:{FOLIO}|GENESIS:{genesis_hash}|MANIFIESTO 51/49: {pct_humano}% HUMANO - {pct_maquina}% MAQUINA - 51%_HUMANO - 49%_IA - 49%_MAQUINA - DETERMINISTICO-{hs}-{suf}"
+def generate_manifesto_from_hash(genesis: str, humano: int = 51, ia: int = 49) -> str:
+    sha = genesis[:8] if genesis else SHA
+    return f"{humano}%_HUMANO:{genesis[:32]}|{ia}%_IA:{genesis[32:]}|FOLIO_PERICIAL:{FOLIO_PERICIAL}|SHA:{sha}|MT01JAAF|TRACE:KRONOS-TRACE-PVA-5204160405358537-MT01JAAF|SC:2607146379465|POLARIDAD:{humano}/{ia}"
