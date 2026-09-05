@@ -9,26 +9,15 @@ def hash_to_semantic_polarity(genesis_hash: str) -> str:
         int(genesis_hash, 16)
     except ValueError:
         raise ValueError(f"hash no es hex: {genesis_hash}")
-    short = genesis_hash[:8]
-    return (
-        f"51% HUMANO - 49% MAQUINA - FOLIO:{FOLIO} - "
-        f"{short} - 51%_HUMANO - 49%_IA"
-    )
+    return f"51% HUMANO - 49% MAQUINA - FOLIO:{FOLIO} - {genesis_hash[:8]} - 51%_HUMANO - 49%_IA"
 
-def generate_manifesto_from_hash(
-    genesis_hash: str, pct_humano: int = 51, pct_maquina: int = 49
-) -> str:
+def generate_manifesto_from_hash(genesis_hash: str, pct_humano: int = 51, pct_maquina: int = 49) -> str:
     if not genesis_hash or len(genesis_hash) < 10:
         raise ValueError("hash inválido")
     try:
         int(genesis_hash, 16)
     except ValueError:
         raise ValueError("hash no hex")
-    hash_short = genesis_hash[:16]
-    suffix = hashlib.sha256(genesis_hash.encode()).hexdigest()[:8]
-    return (
-        f"FOLIO:{FOLIO}|GENESIS:{genesis_hash}|MANIFIESTO 51/49: "
-        f"{pct_humano}% HUMANO - {pct_maquina}% MAQUINA - "
-        f"51%_HUMANO - 49%_IA - 49%_MAQUINA - "
-        f"DETERMINISTICO-{hash_short}-{suffix}"
-    )
+    hs = genesis_hash[:16]
+    suf = hashlib.sha256(genesis_hash.encode()).hexdigest()[:8]
+    return f"FOLIO:{FOLIO}|GENESIS:{genesis_hash}|MANIFIESTO 51/49: {pct_humano}% HUMANO - {pct_maquina}% MAQUINA - 51%_HUMANO - 49%_IA - 49%_MAQUINA - DETERMINISTICO-{hs}-{suf}"
