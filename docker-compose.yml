@@ -1,10 +1,10 @@
 services:
-  enjambre:
+  pva-kronos:
     build: .
-    container_name: kronos_enjambre
-    restart: always
+    ports:
+      - "8081:8081"
+    env_file: .env
     volumes:
-      - ./audit:/app/audit
-      - ./logs:/app/logs
-    environment:
-      - PYTHONUNBUFFERED=1
+      - ./auditoría:/app/auditoría
+      - ./KRONOS:/app/KRONOS
+    restart: unless-stopped

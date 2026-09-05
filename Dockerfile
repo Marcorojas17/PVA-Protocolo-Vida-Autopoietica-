@@ -1,12 +1,6 @@
-FROM python:3.12-slim
-
+FROM python:3.11-slim
 WORKDIR /app
-
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
-
+COPY requisitos.txt .
+RUN pip install -r requisitos.txt
 COPY . .
-
-RUN mkdir -p /app/audit /app/logs
-
-CMD ["python", "KRONOS/agentes/enjambre_autopoietico.py"]
+CMD ["python", "servidor_webhook.py"]
