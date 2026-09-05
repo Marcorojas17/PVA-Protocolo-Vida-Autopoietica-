@@ -9,6 +9,7 @@ SC: 2607146379465
 TX Amoy: 0x8ca8e84e1258abac9acb29d14d25114e4775d782ecfda51ae29933247ed2970e
 Genera: audit/qr_folio_5204160405358537_MT01JAAF.png
 """
+
 import os, json
 from pathlib import Path
 from datetime import datetime
@@ -36,6 +37,7 @@ URL_VERIFICA_2 = f"https://verifica.fdv.mx/folio/{FOLIO_MAESTRO}"
 URL_API = f"https://api.kronos-legado.digital/v1/api/verifica/{SELLO}"
 EXPLORER_URL = f"https://amoy.polygonscan.com/tx/{TX}"
 
+
 def log_custodia(msg: str):
     AUDIT_DIR.mkdir(exist_ok=True)
     ts = datetime.utcnow().isoformat() + "Z"
@@ -44,19 +46,23 @@ def log_custodia(msg: str):
     with open(LOG_PATH, "a", encoding="utf-8") as f:
         f.write(entry + "\n")
 
+
 def generate_qr():
     try:
         import qrcode
         from qrcode.image.styledpil import StyledPilImage
         from qrcode.image.styles.moduledrawers import RoundedModuleDrawer
+
         has_styled = True
     except ImportError:
         print("[!] Instalando qrcode[pil]...")
         os.system("pip install qrcode[pil] --quiet")
         import qrcode
+
         try:
             from qrcode.image.styledpil import StyledPilImage
             from qrcode.image.styles.moduledrawers import RoundedModuleDrawer
+
             has_styled = True
         except:
             has_styled = False
@@ -75,21 +81,33 @@ def generate_qr():
         "v": URL_VERIFICA_1,
         "explorer": EXPLORER_URL,
         "github": URL_GITHUB,
-        "t": datetime.utcnow().isoformat() + "Z"
+        "t": datetime.utcnow().isoformat() + "Z",
     }
 
     # QR data 100/10: lleva a certificado real + sello completo MT01JAAF
-    qr_data = f"{URL_VERIFICA_1}&genesis={GENESIS}&perito={PERITO}&sha={SHA}&sc={SC}&tx={TX}"
+    qr_data = (
+        f"{URL_VERIFICA_1}&genesis={GENESIS}&perito={PERITO}&sha={SHA}&sc={SC}&tx={TX}"
+    )
 
     print(f"[*] Generando QR MT01JAAF para {FOLIO_MAESTRO}")
     print(f"[*] Data: {qr_data}")
 
-    qr = qrcode.QRCode(version=6, error_correction=qrcode.constants.ERROR_CORRECT_H, box_size=12, border=4)
+    qr = qrcode.QRCode(
+        version=6,
+        error_correction=qrcode.constants.ERROR_CORRECT_H,
+        box_size=12,
+        border=4,
+    )
     qr.add_data(qr_data)
     qr.make(fit=True)
 
     if has_styled:
-        img = qr.make_image(image_factory=StyledPilImage, module_drawer=RoundedModuleDrawer(), fill_color="#0a0a0a", back_color="white")
+        img = qr.make_image(
+            image_factory=StyledPilImage,
+            module_drawer=RoundedModuleDrawer(),
+            fill_color="#0a0a0a",
+            back_color="white",
+        )
     else:
         img = qr.make_image(fill_color="#0a0a0a", back_color="#ffffff")
 
@@ -116,10 +134,10 @@ def generate_qr():
             "verifica_kronos": URL_VERIFICA_1,
             "verifica_fdv": URL_VERIFICA_2,
             "api": URL_API,
-            "polygonscan_amoy": EXPLORER_URL
+            "polygonscan_amoy": EXPLORER_URL,
         },
         "created": datetime.utcnow().isoformat() + "Z",
-        "norma": "NOM-151 Art.10 + MT01JAAF + SHA a4ff808e"
+        "norma": "NOM-151 Art.10 + MT01JAAF + SHA a4ff808e",
     }
 
     with open(SELLO_PATH, "w", encoding="utf-8") as f:
@@ -128,10 +146,16 @@ def generate_qr():
     log_custodia(f"QR MT01JAAF generado: {QR_PATH} -> {URL_VERIFICA_1}")
     return str(QR_PATH)
 
+
 def main():
-    print(f"╔══════════════════════════════════════════════════╗\n║ PVA QR GENERATOR MT01JAAF SHA {SHA} ║\n║ Maestro:{FOLIO_MAESTRO} Pericial:{FOLIO_PERICIAL} ║\n║ Sello:{SELLO} ║\n╚══════════════════════════════════════════════════╝")
+    print(
+        f"╔══════════════════════════════════════════════════╗\n║ PVA QR GENERATOR MT01JAAF SHA {SHA} ║\n║ Maestro:{FOLIO_MAESTRO} Pericial:{FOLIO_PERICIAL} ║\n║ Sello:{SELLO} ║\n╚══════════════════════════════════════════════════╝"
+    )
     path = generate_qr()
-    print(f"\n[FIN] QR MT01JAAF listo: {path}\nVerifica: {URL_VERIFICA_1}\nExplorer: {EXPLORER_URL}")
+    print(
+        f"\n[FIN] QR MT01JAAF listo: {path}\nVerifica: {URL_VERIFICA_1}\nExplorer: {EXPLORER_URL}"
+    )
+
 
 if __name__ == "__main__":
     main()

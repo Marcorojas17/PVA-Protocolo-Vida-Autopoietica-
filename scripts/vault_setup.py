@@ -33,6 +33,7 @@ ENV_EXAMPLE = ROOT / ".env.example"
 AUDIT_DIR = ROOT / "audit"
 LOG_FILE = AUDIT_DIR / "cadena_custodia.log"
 
+
 def log_custodia(msg: str):
     AUDIT_DIR.mkdir(exist_ok=True)
     timestamp = datetime.utcnow().isoformat() + "Z"
@@ -41,13 +42,20 @@ def log_custodia(msg: str):
     with open(LOG_FILE, "a", encoding="utf-8") as f:
         f.write(entry + "\n")
 
+
 def check_gitignore():
     gitignore = ROOT / ".gitignore"
     required = [
         "config/private_keys/",
-        "*.key", "*.cer", "*.pem", ".env",
-        "audit/sello_kronos.json", "audit/*.pdf",
-        "__pycache__/", "*.pyc", ".pytest_cache/"
+        "*.key",
+        "*.cer",
+        "*.pem",
+        ".env",
+        "audit/sello_kronos.json",
+        "audit/*.pdf",
+        "__pycache__/",
+        "*.pyc",
+        ".pytest_cache/",
     ]
     content = gitignore.read_text(encoding="utf-8") if gitignore.exists() else ""
     missing = [r for r in required if r not in content]
@@ -60,16 +68,25 @@ def check_gitignore():
         print("[OK] .gitignore blindado MT01JAAF")
         log_custodia(".gitignore verificado OK MT01JAAF")
 
+
 def setup_private_dir():
     PRIVATE_DIR.mkdir(parents=True, exist_ok=True)
-    (PRIVATE_DIR / ".gitkeep").write_text(f"# {FOLIO_PERICIAL} {SHA} - FIEL SAT .key/.cer - NUNCA SUBIR - SC {SC}\n", encoding="utf-8")
-    exposed = list(PRIVATE_DIR.glob("*.key")) + list(PRIVATE_DIR.glob("*.pem")) + list(PRIVATE_DIR.glob("*.p12"))
+    (PRIVATE_DIR / ".gitkeep").write_text(
+        f"# {FOLIO_PERICIAL} {SHA} - FIEL SAT .key/.cer - NUNCA SUBIR - SC {SC}\n",
+        encoding="utf-8",
+    )
+    exposed = (
+        list(PRIVATE_DIR.glob("*.key"))
+        + list(PRIVATE_DIR.glob("*.pem"))
+        + list(PRIVATE_DIR.glob("*.p12"))
+    )
     if exposed:
         print(f"[CRITICO] LLAVES EXPUESTAS: {exposed}")
         log_custodia(f"ALERTA: llaves expuestas {exposed}")
     else:
         print(f"[OK] {PRIVATE_DIR} limpio MT01JAAF")
         log_custodia("private_keys limpio MT01JAAF")
+
 
 def setup_env():
     if not ENV_FILE.exists() and ENV_EXAMPLE.exists():
@@ -78,8 +95,11 @@ def setup_env():
         content = ENV_FILE.read_text(encoding="utf-8")
         if FOLIO_PERICIAL not in content:
             with open(ENV_FILE, "a", encoding="utf-8") as f:
-                f.write(f"\n# PVA MT01JAAF 100/10\nPVA_FOLIO_MAESTRO={FOLIO_MAESTRO}\nPVA_FOLIO_PERICIAL={FOLIO_PERICIAL}\nPVA_SHA={SHA}\nPVA_PERITO={PERITO}\nPVA_GENESIS={GENESIS}\nPVA_SELLO={SELLO}\nPVA_SC={SC}\nPVA_TX={TX}\nPVA_CHAIN_ID={CHAIN_ID}\n")
+                f.write(
+                    f"\n# PVA MT01JAAF 100/10\nPVA_FOLIO_MAESTRO={FOLIO_MAESTRO}\nPVA_FOLIO_PERICIAL={FOLIO_PERICIAL}\nPVA_SHA={SHA}\nPVA_PERITO={PERITO}\nPVA_GENESIS={GENESIS}\nPVA_SELLO={SELLO}\nPVA_SC={SC}\nPVA_TX={TX}\nPVA_CHAIN_ID={CHAIN_ID}\n"
+                )
             log_custodia(f"Env inyectado {FOLIO_PERICIAL}:{SHA}")
+
 
 def setup_kms_structure():
     kms_config = {
@@ -101,14 +121,23 @@ def setup_kms_structure():
         "norma": "NOM-151-SCFI-2016 A8.3 + ISO 27001 A8.24 + MT01JAAF",
     }
     CONFIG_DIR.mkdir(exist_ok=True)
-    (CONFIG_DIR / "vault_config.json").write_text(json.dumps(kms_config, indent=2), encoding="utf-8")
+    (CONFIG_DIR / "vault_config.json").write_text(
+        json.dumps(kms_config, indent=2), encoding="utf-8"
+    )
     log_custodia("vault_config MT01JAAF creado")
 
+
 def main():
-    print(f"╔════════════════════════════════════════════════╗\n║ PVA VAULT SETUP MT01JAAF SHA {SHA}          ║\n║ Maestro:{FOLIO_MAESTRO} Pericial:{FOLIO_PERICIAL} ║\n║ Sello:{SELLO} ║\n╚════════════════════════════════════════════════╝")
-    check_gitignore(); setup_private_dir(); setup_env(); setup_kms_structure()
+    print(
+        f"╔════════════════════════════════════════════════╗\n║ PVA VAULT SETUP MT01JAAF SHA {SHA}          ║\n║ Maestro:{FOLIO_MAESTRO} Pericial:{FOLIO_PERICIAL} ║\n║ Sello:{SELLO} ║\n╚════════════════════════════════════════════════╝"
+    )
+    check_gitignore()
+    setup_private_dir()
+    setup_env()
+    setup_kms_structure()
     log_custodia(f"VAULT COMPLETADO MT01JAAF {FOLIO_MAESTRO} NOM-151 OK")
     print(f"[FIN] Vault MT01JAAF listo. {LOG_FILE}")
+
 
 if __name__ == "__main__":
     main()
