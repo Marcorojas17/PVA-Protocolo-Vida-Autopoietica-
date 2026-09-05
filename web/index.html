@@ -12,24 +12,27 @@ input{width:100%;padding:14px;background:#000;border:1px solid var(--neon);borde
 .btn{padding:12px 18px;border-radius:8px;font-weight:900;cursor:pointer;display:inline-block;text-decoration:none;font-size:.85rem}
 .btn-p{background:var(--gold);color:#000;border:none}.btn-n{border:1px solid var(--neon);color:var(--neon);background:transparent}
 .result{margin-top:15px;padding:15px;background:#000;border:1px solid var(--gold);border-radius:8px;display:none}
-#qrcode{display:none}
 .luz{width:14px;height:14px;background:#00ff88;border-radius:50%;box-shadow:0 0 15px #00ff88;display:inline-block;animation:pulse 1.5s infinite}
 @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(0,255,136,.7)}70%{box-shadow:0 0 0 10px rgba(0,255,136,0)}100%{box-shadow:0 0 0 0 rgba(0,255,136,0)}}
 </style></head><body>
 <div class="nav"><a href="./verification.html">← VERIFICAR</a><b style="color:var(--gold)"><span class="luz"></span> KRONOS-5204-8537 • HOY GRATIS</b><a href="./marketplace.html">MARKET →</a></div>
 <div class="main">
 <div class="card">
-<div style="color:var(--gold);font-weight:900">01 / 03 - ORÁCULO FORENSE</div>
+<div style="color:var(--gold);font-weight:900">01 / 03 - ORÁCULO FORENSE - SIN AUTO-REDIRECT</div>
 <input id="h" value="41a3683bbf83296eeb45da9b0e0ea5a7c095e78b493772e79520a92dbc39f4c3">
 <div style="display:flex;gap:10px;margin-top:12px;flex-wrap:wrap">
-<button class="btn btn-p" onclick="invocar()">⚡ INVOCAR VIDA</button>
+<button class="btn btn-p" onclick="invocar()">⚡ INVOCAR VIDA (SE QUEDA AQUÍ)</button>
 <button class="btn btn-n" onclick="descargarPDF()">📄 DESCARGAR PDF + QR</button>
 </div>
 <div class="result" id="res">
-<div style="color:var(--neon)">✅ DICTAMEN GENERADO - LISTO PARA PDF</div>
+<div style="color:var(--neon)">✅ DICTAMEN GENERADO - TE QUEDAS EN ESTA PÁGINA</div>
 <div id="resHash" style="font-size:.7rem;word-break:break-all;margin:8px 0;color:var(--gold)"></div>
 <div id="qrcode"></div>
-<div style="font-size:.75rem">Folio: KRONOS-5204-8537 | ISO 27001:2022 | ISO 27037 | NOM-151 | SafeCreative 2607146379465</div>
+<div style="font-size:.75rem">Folio: KRONOS-5204-8537 | ISO 27001 | ISO 27037 | NOM-151 | SafeCreative 2607146379465</div>
+<div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap">
+<a class="btn btn-n" href="./marketplace.html" style="font-size:.75rem">IR A MARKET MANUAL →</a>
+<a class="btn btn-n" href="./verification.html" style="font-size:.75rem">IR A VERIFICACIÓN →</a>
+</div>
 </div>
 </div>
 </div>
@@ -42,7 +45,8 @@ function invocar(){
  document.getElementById('resHash').textContent='SHA-256: '+currentHash;
  document.getElementById('res').style.display='block';
  document.getElementById('qrcode').innerHTML='';
- new QRCode(document.getElementById('qrcode'),{text:`KRONOS-5204-8537|${currentHash}|${new Date().toISOString()}|ISO27001|NOM151`,width:128,height:128});
+ new QRCode(document.getElementById('qrcode'),{text:`KRONOS-5204-8537|${currentHash}|${new Date().toISOString()}`,width:128,height:128});
+ // YA NO HAY setTimeout ni location.href - SE QUEDA AQUI
 }
 async function descargarPDF(){
  if(!currentHash) invocar();
@@ -53,14 +57,11 @@ async function descargarPDF(){
  doc.text(`FOLIO MAESTRO: KRONOS-5204-8537`,10,25);
  doc.text(`SHA-256: ${currentHash}`,10,32);
  doc.text(`FECHA UTC: ${new Date().toISOString()}`,10,39);
- doc.text(`ESTADO: VALIDO - CADENA CONSERVADA - INTACTA`,10,46);
- doc.text(`CUMPLIMIENTO: ISO 27001:2022 | ISO 27037:2012 | NOM-151-SCFI-2016 | eIDAS UE 910/2014`,10,53);
+ doc.text(`ESTADO: VALIDO - CADENA CONSERVADA`,10,46);
+ doc.text(`CUMPLIMIENTO: ISO 27001:2022 | ISO 27037:2012 | NOM-151 | eIDAS`,10,53);
  doc.text(`SAFE CREATIVE: 2607146379465`,10,60);
- doc.text(`SELLO ANTIFALSIFICABLE: VALIDO - SIN ALTERACIONES`,10,67);
- doc.text(`VERIFICACION: https://marcorojas17.github.io/PVA-Protocolo-Vida-Autopoietica-/web/verification.html`,10,74);
- if(qrData) doc.addImage(qrData,'PNG',10,80,60,60);
- doc.text(`Este documento es verificable offline y online mediante QR.`,10,150);
- doc.save(`Dictamen_KRONOS-5204-8537_${currentHash.slice(0,8)}.pdf`);
+ if(qrData) doc.addImage(qrData,'PNG',10,70,60,60);
+ doc.save(`Dictamen_KRONOS_${currentHash.slice(0,8)}.pdf`);
 }
 </script>
 </body></html>
