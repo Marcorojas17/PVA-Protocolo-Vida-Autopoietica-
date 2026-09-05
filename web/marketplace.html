@@ -1,56 +1,50 @@
 <!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>KRONOS 360 | Laboratorio Forense - Planes</title>
-<style>
-:root{--neon:#00ffcc;--gold:#D4AF37;--bg:#020806;--panel:#06110e}
+<title>KRONOS 360 | Market - Hoy Gratis</title>
+<style>:root{--neon:#00ffcc;--gold:#D4AF37;--bg:#020806;--panel:#06110e}
 *{margin:0;padding:0;box-sizing:border-box}body{background:var(--bg);color:#c8d8d3;font-family:'JetBrains Mono',monospace}
-.top{padding:12px 20px;border-bottom:2px solid var(--neon);display:flex;justify-content:space-between;background:#05120f;position:sticky;top:0;z-index:10}
-.top a{color:var(--neon);text-decoration:none;font-weight:700}
-.main{max-width:1280px;margin:20px auto;padding:0 20px}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:20px}
-.card{background:var(--panel);border:1px solid rgba(0,255,204,.35);border-radius:12px;padding:20px}
-.card.gold{border-color:rgba(212,175,55,.6)}
-.price{font-size:2.5rem;font-weight:900;color:var(--neon)}.card.gold .price{color:var(--gold)}
-.tech{margin:12px 0;border:1px dashed #234;padding:12px;border-radius:8px;background:rgba(0,0,0,.4);text-align:left}
-.tech b{color:var(--gold);font-size:.8rem;display:block;margin-bottom:6px;border-bottom:1px solid #222;padding-bottom:4px}
-.tech ul{list-style:none;font-size:.78rem;line-height:1.7}
-.btn{display:block;text-align:center;padding:12px;border:1px solid var(--neon);color:var(--neon);text-decoration:none;border-radius:8px;font-weight:700;letter-spacing:1px;margin-top:14px}
-.btn:hover{background:var(--neon);color:#000}.btn.gold{border-color:var(--gold);color:var(--gold)}.btn.gold:hover{background:var(--gold);color:#000}
-.footer{font-size:.6rem;color:#456;text-align:center;margin-top:30px;border-top:1px solid #111;padding:15px}
+.nav{display:flex;justify-content:space-between;align-items:center;padding:10px 20px;background:#05120f;border-bottom:2px solid var(--gold);position:sticky;top:0;z-index:10}
+.nav a{color:var(--neon);text-decoration:none;border:1px solid var(--neon);padding:6px 14px;border-radius:6px;font-size:.8rem}.nav a.gold{color:var(--gold);border-color:var(--gold)}
+.main{max-width:1200px;margin:20px auto;padding:0 20px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(310px,1fr));gap:18px}
+.card{background:var(--panel);border:1px solid rgba(0,255,204,.35);border-radius:12px;padding:18px}
+.card.gold{border-color:var(--gold);box-shadow:0 0 25px rgba(212,175,55,.15)}
+.price{font-size:2.2rem;font-weight:900;color:var(--neon)}.card.gold .price{color:var(--gold)}
+.tech{margin:10px 0;border:1px dashed #234;padding:10px;border-radius:8px;background:rgba(0,0,0,.4);font-size:.78rem}
+.btn{display:block;text-align:center;padding:12px;border-radius:8px;font-weight:900;letter-spacing:1px;text-decoration:none;margin-top:10px}
+.btn-p{background:var(--gold);color:#000}.btn-n{border:1px solid var(--neon);color:var(--neon)}
+.info{border:1px dashed var(--gold);background:rgba(212,175,55,.06);padding:15px;border-radius:10px;margin-top:18px}
 </style></head><body>
-<div class="top"><a href="./index.html">← ORÁCULO</a><span style="color:var(--gold);font-weight:900">FOLIO: KRONOS-5204-8537</span><a href="./verification.html">VERIFICACIÓN →</a></div>
+<div class="nav"><a href="./index.html">← ANTERIOR: ORÁCULO</a><b style="color:var(--gold)">02 / 03 - MARKETPLACE • HOY $0 - MAÑANA $1,999</b><a class="gold" href="./verification.html">SIGUIENTE: VERIFICACIÓN →</a></div>
 <div class="main">
-<div style="text-align:center;border:1px solid var(--neon);padding:20px;border-radius:12px;background:rgba(0,15,10,.6);margin-bottom:20px">
-<h1 style="color:var(--neon);letter-spacing:4px">KRONOS 360 — LABORATORIO FORENSE DIGITAL</h1>
-<p style="color:var(--gold);font-size:.85rem;margin-top:8px">Cumplimiento Internacional • ISO 27001:2022 • ISO 27037:2012 • NOM-151-SCFI-2016 • eIDAS</p>
-<p id="hashShow" style="font-size:.7rem;color:#666;margin-top:8px"></p>
+<div style="text-align:center;padding:15px;border:1px solid var(--neon);border-radius:10px;background:rgba(0,15,10,.5);margin-bottom:18px">
+<h2 style="color:var(--neon)">LABORATORIO FORENSE - PLANES DE DEFENSA LEGAL</h2>
+<p id="hs" style="font-size:.7rem;color:#666;margin-top:6px"></p>
 </div>
 <div class="grid">
-<div class="card">
-<div style="color:#fff;font-weight:900">NIVEL 1 - DICTAMEN GENÉTICO</div>
-<div class="price">$0 HOY</div><div style="font-size:.75rem;color:#888">Antes $299 MXN — Análisis forense inicial</div>
-<div class="tech"><b>¿QUÉ INCLUYE?</b><ul><li>Firma SHA-256 con folio maestro KRONOS-5204-8537</li><li>Sello de tiempo cualificado RFC 3161 (eIDAS)</li><li>QR verificable NOM-151</li><li>PDF con trazabilidad ISO 27037</li></ul></div>
-<div class="tech"><b>ARQUITECTURA</b><ul><li>Motor AES-256 + cadena de custodia append-only</li><li>Agente Custodio 24/7</li><li>Entrega inmediata</li></ul></div>
-<a href="./index.html" class="btn" onclick="localStorage.getItem('kronos_hash')||alert('Primero genera tu hash en Oráculo')">GENERAR DICTAMEN GRATIS</a>
+<div class="card"><b>NIVEL 1 - DICTAMEN GENÉTICO</b><div class="price">$0 HOY</div><div style="font-size:.7rem;color:#888">Antes $299 MXN</div>
+<div class="tech"><b>INCLUYE:</b> ✓ Firma SHA-256 + Folio KRONOS-5204-8537<br>✓ Sello tiempo RFC 3161 / eIDAS<br>✓ QR NOM-151 verificable<br>✓ PDF con trazabilidad ISO 27037</div>
+<a class="btn btn-n" href="./index.html">GENERAR GRATIS EN ORÁCULO</a></div>
+<div class="card gold"><b style="color:var(--gold)">NIVEL 2 - AUDITORÍA ISO 27001 + NOM-151</b><div class="price">$0 HOY</div><div style="font-size:.7rem;color:#888">Antes $1,999 MXN - 5 lugares</div>
+<div class="tech"><b>INCLUYE:</b> Todo Nivel 1 +<br>✓ Anclaje Polygon + IPFS<br>✓ Constancia NOM-151-SCFI-2016<br>✓ Evaluación bajo ISO 27001:2022 / 27037<br>✓ 7 Agentes autónomos<br>✓ Regla 51/49 documentada</div>
+<a class="btn btn-p" id="mailBtn" href="#">SOLICITAR AUDITORÍA GRATIS</a></div>
+<div class="card"><b>VERIFICACIÓN PÚBLICA</b><div class="price">$0</div><div style="font-size:.7rem;color:#888">Ilimitada</div>
+<div class="tech"><b>INCLUYE:</b> Valida sello antifalsificable<br>Comprueba blockchain<br>SafeCreative 2607146379465</div>
+<a class="btn btn-n" href="./verification.html">IR A VERIFICAR →</a></div>
 </div>
-<div class="card gold">
-<div style="color:var(--gold);font-weight:900">NIVEL 2 - AUDITORÍA ISO + NOM-151</div>
-<div class="price">$0 HOY</div><div style="font-size:.75rem;color:#888">Antes $1,999 MXN — Sistema de Defensa Perpetua</div>
-<div class="tech"><b>¿QUÉ INCLUYE?</b><ul><li>Todo Nivel 1 + constancia de conservación NOM-151</li><li>Anclaje Blockchain Polygon verificable en explorer</li><li>Respaldo IPFS + HSM</li><li>Enjambre de 7 agentes autónomos (Custodio, Escriba, Vigilante...)</li><li>Regla 51/49 (autoría humano/IA documentada)</li></ul></div>
-<div class="tech"><b>CUMPLIMIENTO</b><ul><li>Diseñado bajo controles ISO 27001:2022</li><li>Metodología ISO 27037 para evidencia digital</li><li>API de verificación para jueces</li></ul></div>
-<a href="mailto:kronosproyecto@hotmail.com?subject=Solicitud%20Auditoria%20KRONOS-5204-8537&body=Mi%20hash:%20" id="mailBtn" class="btn gold">SOLICITAR AUDITORÍA GRATIS - 5 LUGARES</a>
+<div class="info">
+<b>🎯 ¿PARA QUÉ SIRVE ESTE MARKETPLACE?</b>
+<p style="font-size:.8rem;line-height:1.7;color:#aaa;margin-top:8px">
+Aquí conviertes tu huella digital en defensa legal. No es un registro de copyright, es un sistema de preservación de evidencia.<br><br>
+<b style="color:var(--neon)">NIVEL 1:</b> Para creadores que necesitan probar que su obra existía en una fecha cierta ante MP/SAT/Civil.<br>
+<b style="color:var(--gold)">NIVEL 2:</b> Para empresas y abogados que necesitan peritaje internacional válido en tribunal (NOM-151 + ISO).<br><br>
+<span style="font-size:.7rem;color:#666">Sin revelar: La lógica de consenso, el algoritmo de auto-sanación y las claves HSM permanecen en bóveda. El cliente solo ve resultado verificable.</span>
+</p>
 </div>
-<div class="card">
-<div style="color:var(--neon);font-weight:900">VERIFICACIÓN PÚBLICA</div>
-<div class="price">$0</div><div style="font-size:.75rem;color:#888">Consulta ilimitada</div>
-<div class="tech"><b>¿QUÉ HACE?</b><ul><li>Valida integridad del sello antifalsificable</li><li>Comprueba autoría SafeCreative 2607146379465</li><li>Consulta blockchain sin costo</li></ul></div>
-<a href="./verification.html" class="btn">PROBAR VERIFICACIÓN GRATIS</a>
-</div>
-</div>
-<div class="footer">AVISO LEGAL: Plataforma DEMO. No constituye certificado oficial. Arquitectura diseñada bajo ISO 27001:2022 | ISO 27037:2012 | NOM-151-SCFI-2016 | eIDAS Reglamento UE 910/2014 | SafeCreative 2607146379465 | Folio: KRONOS-5204-8537 | ESTADO: EN LÍNEA</div>
 </div>
 <script>
 let h=localStorage.getItem('kronos_hash')||new URLSearchParams(location.search).get('hash')||'';
-document.getElementById('hashShow').textContent=h?'Hash activo: '+h:'Sin hash - Ve al Oráculo primero';
-let mail=document.getElementById('mailBtn'); if(mail&&h){mail.href='mailto:kronosproyecto@hotmail.com?subject=Solicitud Auditoria '+h.slice(0,8)+'&body=Mi hash SHA-256: '+h+'%0AFolio: KRONOS-5204-8537';}
+document.getElementById('hs').textContent=h?'Hash activo: '+h+' | Folio: KRONOS-5204-8537':'Sin hash - genera primero en Oráculo';
+let m=document.getElementById('mailBtn'); m.href='mailto:kronosproyecto@hotmail.com?subject=Auditoria%20Gratis%20'+(h.slice(0,8)||'KRONOS')+'&body=Hash:%20'+h+'%0AFolio:%20KRONOS-5204-8537%0APlan:%20Nivel%202';
+m.onclick=function(){if(!h){alert('Primero genera tu hash en Oráculo'); location.href='./index.html'; return false;}};
 </script>
 </body></html>
