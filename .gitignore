@@ -1,9 +1,57 @@
+# === 100/10 PVA KRONOS MT01JAAF SHA a4ff808e ===
+
+# Secretos - NUNCA commitear
 .env
 .env.local
+.env.*.local
+.env.production
+
+# Dictámenes cliente - PII - propiedad privada
+audit/*.pdf
+audit/*.json
+cola_reintento/
+web/links_pago.json
+
+# Python
 __pycache__/
 *.pyc
-venv/
-*.zip
-.DS_Store
+*.pyo
+*.pyd
+*.egg-info/
 pva_protocolo_vida_autopoietica.egg-info/
-__pycache__/
+dist/
+build/
+*.egg
+
+# Entornos
+venv/
+.venv/
+env/
+ENV/
+.venv*/
+env*/
+
+# Comprimidos temporales
+*.zip
+*.tar.gz
+*.rar
+
+# OS
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+
+# IDE
+.vscode/
+.idea/
+*.code-workspace
+
+# Logs
+*.log
+logs/
+*.sqlite3
+
+# Render local
+.render/
