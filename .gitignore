@@ -5,3 +5,5 @@ __pycache__/
 venv/
 *.zip
 .DS_Store
+pva_protocolo_vida_autopoietica.egg-info/
+__pycache__/
