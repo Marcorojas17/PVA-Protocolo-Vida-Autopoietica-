@@ -1,7 +1,10 @@
 FOLIO = "5204160405358537"
 PERITO = "kronosproyecto@hotmail.com"
 
-def generar_sello_kronos(genesis_hash: str, folio: str = None, perito: str = None) -> str:
+
+def generar_sello_kronos(
+    genesis_hash: str, folio: str = None, perito: str = None
+) -> str:
     f = folio or FOLIO
     p = perito or PERITO
     g = genesis_hash

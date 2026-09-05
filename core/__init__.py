@@ -29,26 +29,37 @@ MANIFIESTO = f"FOLIO:{FOLIO_MAESTRO}|PERITO:{PERITO_EMAIL}|GENESIS:{GENESIS_HASH
 AUDIT_DIR = Path(__file__).parent.parent / "audit"
 SELLO_PATH = AUDIT_DIR / "sello_kronos.json"
 
+
 # Lazy imports para no romper si faltan deps
 def get_audit_trail():
     from .pva_audit_trail import PVAAuditTrail
+
     return PVAAuditTrail()
+
 
 def get_perito_seal(private_key=None):
     from .perito_seal import PeritoSeal
+
     return PeritoSeal(private_key)
+
 
 def get_blockchain_verifier():
     from .blockchain_verifier import BlockchainVerifier
+
     return BlockchainVerifier()
+
 
 def get_genesis_breather():
     from .genesis_breather import GenesisBreather
+
     return GenesisBreather()
+
 
 def get_hash_to_semantic():
     from .hash_to_semantic import HashToSemantic
+
     return HashToSemantic()
+
 
 # Dictamen rapido - 4/4
 def verifica_folio_rapido(folio: str = FOLIO_MAESTRO) -> dict:
@@ -74,6 +85,7 @@ def verifica_folio_rapido(folio: str = FOLIO_MAESTRO) -> dict:
         "dictamen": f"DICTAMEN 10/10 - Folio {folio} {'VALIDO' if is_maestro else 'INVALIDO - maestro es ' + FOLIO_MAESTRO}",
     }
 
+
 def dictamen_10_10() -> str:
     return f"""
 DICTAMEN PERICIAL 10/10 - KRONOS 360 PVA
@@ -96,6 +108,7 @@ Verifica:
 Norma: NOM-151 Art.8/10/38 + ISO 27001 A5.9 A5.17 A8.24 A8.26 A8.28 + eIDAS
 Confianza: 4/4 - Listo tribunal MP/Fiscalia/SAT
 """.strip()
+
 
 # Exports
 __all__ = [
