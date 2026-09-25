@@ -217,7 +217,7 @@
     if (!txt.trim()) return;
 
     var events = parseIWC(txt);
-    var byKind = {}, aps = {}, apps = {}, hours = {};
+    var byKind = {}, apps = {}, hours = {};
     var rssiMap = {};
 
     events.forEach(function (e) {
@@ -326,6 +326,7 @@
   $('btnClearPano').addEventListener('click', function () {
     panoFiles = []; renderPanoList(); $('panoOut').innerHTML = '';
   });
+
   $('btnPano').addEventListener('click', function () {
     if (!panoFiles.length) return;
     var out = $('panoOut'); out.innerHTML = '';
@@ -343,29 +344,71 @@
     addCard(cards, 'DESCONOCIDOS', buckets.unknown.length, buckets.unknown.length ? 'warn' : '');
     out.appendChild(cards);
 
+    var flagTotals = {}, worst = { tmo: 0, day: null };
+    var totalEntries = 0, totalAnom = 0;
+    var insightText = '';
+
     if (buckets.m0.length && window.FSDBG) {
-      var flagTotals = {}, worst = { tmo: 0, day: null };
       buckets.m0.forEach(function (f) {
         var parsed = FSDBG.parse(f.text);
         var s = FSDBG.summarize(parsed);
+        totalEntries += s.total || 0;
+        totalAnom += s.anomalous || 0;
         for (var k in s.flagTotals) flagTotals[k] = (flagTotals[k] || 0) + s.flagTotals[k];
         parsed.events.forEach(function (ev) {
           if (ev.flags && ev.flags.TMO > worst.tmo) { worst.tmo = ev.flags.TMO; worst.day = ev.timestamp; }
         });
       });
-      var txt = '<strong>LECTURA:</strong> ';
+      insightText = '<strong>LECTURA:</strong> ';
       if (flagTotals.ECC > 0 && flagTotals.TMO > 0) {
-        txt += 'ECC=' + flagTotals.ECC + ' y TMO=' + flagTotals.TMO +
+        insightText += 'ECC=' + flagTotals.ECC + ' y TMO=' + flagTotals.TMO +
           ' acumulados. Storage arrastra anomalías crónicas. ';
-        if (worst.day) txt += 'Pico TMO=' + worst.tmo + ' en ' + worst.day + '.';
+        if (worst.day) insightText += 'Pico TMO=' + worst.tmo + ' en ' + worst.day + '.';
       } else if (flagTotals.ECC > 0) {
-        txt += 'Solo ECC=' + flagTotals.ECC + '. Integridad de datos comprometida.';
+        insightText += 'Solo ECC=' + flagTotals.ECC + '. Integridad de datos comprometida.';
       } else if (flagTotals.TMO > 0) {
-        txt += 'Solo TMO=' + flagTotals.TMO + '. Timeouts de I/O.';
+        insightText += 'Solo TMO=' + flagTotals.TMO + '. Timeouts de I/O.';
       } else {
-        txt += 'Sin flags de error acumulados.';
+        insightText += 'Sin flags de error acumulados. Storage limpio.';
       }
-      out.appendChild(el('div', 'insight', txt));
+      out.appendChild(el('div', 'insight', insightText));
+
+      // Botón COPIAR DIAGNÓSTICO
+      var btnCopy = el('button', 'act', 'COPIAR DIAGNÓSTICO');
+      btnCopy.style.marginTop = '10px';
+      btnCopy.addEventListener('click', function () {
+        var md = [
+          '# Diagnóstico PVA · Storage',
+          '',
+          '- Archivos analizados: ' + panoFiles.length,
+          '- M0 (storage): ' + buckets.m0.length,
+          '- Entradas totales: ' + totalEntries,
+          '- Anomalías: ' + totalAnom,
+          '',
+          '## Contadores acumulados'
+        ];
+        Object.keys(flagTotals).sort().forEach(function (k) {
+          md.push('- ' + k + ': ' + flagTotals[k]);
+        });
+        md.push('');
+        md.push('## Lectura');
+        md.push(insightText.replace(/<[^>]*>/g, ''));
+        md.push('');
+        md.push('---');
+        md.push('Generado con PVA · https://marcorojas17.github.io/PVA-Protocolo-Vida-Autopoietica-/pva.html');
+        var final = md.join('\n');
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(final).then(function () {
+            btnCopy.textContent = 'COPIADO';
+            setTimeout(function () { btnCopy.textContent = 'COPIAR DIAGNÓSTICO'; }, 1500);
+          }).catch(function () {
+            fallbackCopy(final, btnCopy);
+          });
+        } else {
+          fallbackCopy(final, btnCopy);
+        }
+      });
+      out.appendChild(btnCopy);
     }
 
     ['iwc','m0','u','us','ulc','raw','unknown'].forEach(function (k) {
@@ -378,6 +421,19 @@
       out.appendChild(ul);
     });
   });
+
+  function fallbackCopy(text, btn) {
+    var ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.position = 'fixed';
+    ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.select();
+    try { document.execCommand('copy'); btn.textContent = 'COPIADO'; }
+    catch (e) { btn.textContent = 'ERROR AL COPIAR'; }
+    document.body.removeChild(ta);
+    setTimeout(function () { btn.textContent = 'COPIAR DIAGNÓSTICO'; }, 1500);
+  }
 
   // -------- STORAGE --------
   var storeFiles = [];
